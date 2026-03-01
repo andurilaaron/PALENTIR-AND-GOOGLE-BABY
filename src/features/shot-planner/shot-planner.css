@@ -1,0 +1,157 @@
+/* ========================================
+   Shot Planner — Camera Position Manager
+   Agent 4 | src/features/shot-planner
+   ======================================== */
+
+.sp-anchor {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.sp-trigger {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(100, 140, 200, 0.18);
+    background: rgba(10, 16, 28, 0.85);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    color: #dce8f8;
+    font-size: 1.1rem;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sp-trigger:hover {
+    background: rgba(91, 156, 245, 0.15);
+    border-color: rgba(91, 156, 245, 0.3);
+}
+
+.sp {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    width: 280px;
+    background: rgba(10, 16, 28, 0.9);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid rgba(100, 140, 200, 0.18);
+    border-radius: 14px;
+    color: #dce8f8;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+    font-family: system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+}
+
+.sp__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.12);
+}
+
+.sp__title {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.sp__save-btn {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(91, 156, 245, 0.3);
+    background: rgba(91, 156, 245, 0.12);
+    color: #7bb8ff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+}
+
+.sp__save-btn:hover {
+    background: rgba(91, 156, 245, 0.25);
+}
+
+.sp__list {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.sp__item {
+    display: flex;
+    align-items: center;
+    padding: 0 4px 0 0;
+}
+
+.sp__recall-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 8px 14px;
+    background: none;
+    border: none;
+    color: #dce8f8;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s ease;
+    font-family: inherit;
+}
+
+.sp__recall-btn:hover {
+    background: rgba(91, 156, 245, 0.08);
+}
+
+.sp__shot-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.sp__shot-coords {
+    font-size: 0.65rem;
+    color: #5a6a82;
+    font-variant-numeric: tabular-nums;
+}
+
+.sp__delete-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    border: none;
+    background: none;
+    color: #5a6a82;
+    cursor: pointer;
+    font-size: 0.7rem;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sp__delete-btn:hover {
+    background: rgba(248, 113, 113, 0.15);
+    color: #f87171;
+}
+
+.sp__empty {
+    padding: 16px 14px;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #5a6a82;
+    font-style: italic;
+}
