@@ -1,0 +1,17 @@
+{
+    "name": "Palentir",
+    "short_name": "Palentir",
+    "description": "Real-time geospatial intelligence dashboard.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0c131f",
+    "theme_color": "#0c131f",
+    "icons": [
+        {
+            "src": "/vite.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ]
+}
