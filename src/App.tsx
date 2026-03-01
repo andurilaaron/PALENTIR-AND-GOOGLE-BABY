@@ -4,10 +4,17 @@ import { ViewerProvider } from "./core/ViewerContext.tsx";
 import { LayerRegistry } from "./core/LayerRegistry.ts";
 import { DummyLayer } from "./core/DummyLayer.ts";
 import { GoogleTilesLayer } from "./layers/tiles/index.ts";
+import { NasaGibsLayer } from "./layers/nasa/index.ts";
+import { SatelliteLayer } from "./layers/satellites/index.ts";
+import { FlightLayer } from "./layers/flights/index.ts";
+import { EarthquakeLayer } from "./layers/earthquakes/index.ts";
+import { TrafficLayer } from "./layers/traffic/index.ts";
+import { CCTVLayer } from "./layers/cctv/index.ts";
 import { createPostFxEngine } from "./postfx/index.ts";
 import type { PostFxEngine } from "./postfx/index.ts";
 import { LayerPanel } from "./ui/LayerPanel.tsx";
 import { PostFxPanel } from "./ui/PostFxPanel.tsx";
+import { ShotPlannerPanel } from "./features/shot-planner/index.ts";
 
 declare global {
     interface Window {
@@ -53,9 +60,15 @@ export default function App() {
             // Connect the LayerRegistry to the viewer
             LayerRegistry.attach(v);
 
-            // Register layers
-            LayerRegistry.register(new DummyLayer());
+            // Register all layers
             LayerRegistry.register(new GoogleTilesLayer());
+            LayerRegistry.register(new NasaGibsLayer());
+            LayerRegistry.register(new SatelliteLayer());
+            LayerRegistry.register(new FlightLayer());
+            LayerRegistry.register(new EarthquakeLayer());
+            LayerRegistry.register(new TrafficLayer());
+            LayerRegistry.register(new CCTVLayer());
+            LayerRegistry.register(new DummyLayer());
 
             // Initialize PostFX engine
             const engine = createPostFxEngine(v);
@@ -84,6 +97,7 @@ export default function App() {
                 {/* UI overlays */}
                 <LayerPanel />
                 <PostFxPanel engine={pfxEngine} />
+                <ShotPlannerPanel />
             </div>
         </ViewerProvider>
     );

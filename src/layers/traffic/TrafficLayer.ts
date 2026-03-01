@@ -27,10 +27,15 @@ const SAMPLE_HOTSPOTS = [
 
 export class TrafficLayer implements LayerPlugin {
     readonly id = "traffic";
-    readonly label = "Traffic Heatmap";
+    readonly label = "Street Traffic";
     readonly category: LayerCategory = "traffic";
+    readonly icon = "🚗";
+    readonly source = "OpenStreetMap";
+
     enabled = false;
     status: LayerStatus = "idle";
+    entityCount?: number;
+    lastRefresh?: number;
 
     private entityIds: string[] = [];
 
@@ -82,6 +87,9 @@ export class TrafficLayer implements LayerPlugin {
 
             this.entityIds.push(id, `${id}-glow`);
         }
+
+        this.entityCount = SAMPLE_HOTSPOTS.length;
+        this.lastRefresh = Date.now();
 
         console.log(
             `[TrafficLayer] ✅ Loaded ${SAMPLE_HOTSPOTS.length} traffic hotspots (demo data)`

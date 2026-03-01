@@ -21,8 +21,13 @@ export class GoogleTilesLayer implements LayerPlugin {
     readonly id = "google-3d-tiles";
     readonly label = "Google 3D Tiles";
     readonly category: LayerCategory = "tiles";
+    readonly icon = "🗺️";
+    readonly source = "Google Map Tiles API";
+
     enabled = false;
     status: LayerStatus = "idle";
+    entityCount?: number;
+    lastRefresh?: number;
 
     private tileset: InstanceType<typeof import("cesium").Cesium3DTileset> | null =
         null;

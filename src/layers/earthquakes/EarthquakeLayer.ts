@@ -17,8 +17,13 @@ export class EarthquakeLayer implements LayerPlugin {
     readonly id = "earthquakes";
     readonly label = "Earthquakes (24h)";
     readonly category: LayerCategory = "custom";
+    readonly icon = "🌋";
+    readonly source = "USGS";
+
     enabled = false;
     status: LayerStatus = "idle";
+    entityCount?: number;
+    lastRefresh?: number;
 
     private entityIds: string[] = [];
 
@@ -67,6 +72,9 @@ export class EarthquakeLayer implements LayerPlugin {
 
                 this.entityIds.push(id);
             }
+
+            this.entityCount = features.length;
+            this.lastRefresh = Date.now();
 
             console.log(
                 `[EarthquakeLayer] ✅ Loaded ${features.length} earthquakes`

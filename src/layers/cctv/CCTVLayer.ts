@@ -21,10 +21,15 @@ const STATUS_COLORS: Record<CCTVCamera["status"], string> = {
 
 export class CCTVLayer implements LayerPlugin {
     readonly id = "cctv";
-    readonly label = "CCTV Cameras";
+    readonly label = "CCTV Mesh";
     readonly category: LayerCategory = "cctv";
+    readonly icon = "📹";
+    readonly source = "CCTV Mesh + Street View fallback";
+
     enabled = false;
     status: LayerStatus = "idle";
+    entityCount?: number;
+    lastRefresh?: number;
 
     private entityIds: string[] = [];
 
@@ -77,6 +82,9 @@ export class CCTVLayer implements LayerPlugin {
 
             this.entityIds.push(cam.id);
         }
+
+        this.entityCount = SAMPLE_CAMERAS.length;
+        this.lastRefresh = Date.now();
 
         console.log(
             `[CCTVLayer] ✅ Loaded ${SAMPLE_CAMERAS.length} cameras`

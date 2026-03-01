@@ -28,8 +28,13 @@ export class SatelliteLayer implements LayerPlugin {
     readonly id = "satellites";
     readonly label = "Satellites (ISS+)";
     readonly category: LayerCategory = "satellite";
+    readonly icon = "🛰️";
+    readonly source = "CelesTrak";
+
     enabled = false;
     status: LayerStatus = "idle";
+    entityCount?: number;
+    lastRefresh?: number;
 
     private elements: OrbitalElements[] = [];
     private entityIds: string[] = [];
@@ -80,6 +85,9 @@ export class SatelliteLayer implements LayerPlugin {
 
                 this.entityIds.push(id);
             }
+
+            this.entityCount = this.elements.length;
+            this.lastRefresh = Date.now();
 
             console.log(
                 `[SatelliteLayer] ✅ Loaded ${this.elements.length} satellites`

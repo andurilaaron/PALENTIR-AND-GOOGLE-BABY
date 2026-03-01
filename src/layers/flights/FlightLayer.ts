@@ -19,8 +19,13 @@ export class FlightLayer implements LayerPlugin {
     readonly id = "flights";
     readonly label = "Live Flights";
     readonly category: LayerCategory = "flights";
+    readonly icon = "✈️";
+    readonly source = "OpenSky Network";
+
     enabled = false;
     status: LayerStatus = "idle";
+    entityCount?: number;
+    lastRefresh?: number;
 
     private pollTimer: ReturnType<typeof setInterval> | null = null;
     private entityIds: Set<string> = new Set();
@@ -122,5 +127,8 @@ export class FlightLayer implements LayerPlugin {
                 this.entityIds.delete(id);
             }
         }
+
+        this.entityCount = currentIds.size;
+        this.lastRefresh = Date.now();
     }
 }

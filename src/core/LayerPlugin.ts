@@ -28,11 +28,23 @@ export interface LayerPlugin {
     /** Category for grouping in the layer panel */
     readonly category: LayerCategory;
 
+    /** Icon emoji or character for the panel */
+    readonly icon?: string;
+
+    /** Data source name (e.g., "OpenSky Network", "CelesTrak") */
+    readonly source?: string;
+
     /** Whether the layer is currently enabled */
     enabled: boolean;
 
     /** Current lifecycle status */
     status: LayerStatus;
+
+    /** Number of active entities (for display in panel) */
+    entityCount?: number;
+
+    /** Timestamp of last data refresh */
+    lastRefresh?: number;
 
     /**
      * Called when the layer is toggled ON.
