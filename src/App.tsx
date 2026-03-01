@@ -3,6 +3,7 @@ import type { Viewer } from "cesium";
 import { ViewerProvider } from "./core/ViewerContext.tsx";
 import { LayerRegistry } from "./core/LayerRegistry.ts";
 import { DummyLayer } from "./core/DummyLayer.ts";
+import { GoogleTilesLayer } from "./layers/tiles/index.ts";
 import { LayerPanel } from "./ui/LayerPanel.tsx";
 
 declare global {
@@ -48,8 +49,9 @@ export default function App() {
             // Connect the LayerRegistry to the viewer
             LayerRegistry.attach(v);
 
-            // Register the test layer
+            // Register layers
             LayerRegistry.register(new DummyLayer());
+            LayerRegistry.register(new GoogleTilesLayer());
 
             // Expose viewer to React tree
             setViewer(v);
