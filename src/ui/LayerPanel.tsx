@@ -6,15 +6,19 @@
  */
 import { useMemo } from "react";
 import { useLayerRegistry } from "../core/useLayerRegistry.ts";
+import { useAppState } from "../core/useAppState.ts";
 import "./styles/layers-panel.css";
 
 export function LayerPanel() {
     const { layers, toggle } = useLayerRegistry();
+    const { ui } = useAppState();
 
     const enabledCount = useMemo(
         () => layers.filter((l) => l.enabled).length,
         [layers]
     );
+
+    if (!ui.isLayersOpen) return null;
 
     return (
         <div className="lp-anchor">

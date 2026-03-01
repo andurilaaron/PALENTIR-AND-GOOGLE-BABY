@@ -13,3 +13,4 @@ export type { AppStateShape, EffectMode } from "./AppState.ts";
 export { ViewerProvider, useViewer } from "./ViewerContext.tsx";
 export { useLayerRegistry } from "./useLayerRegistry.ts";
 export { DummyLayer } from "./DummyLayer.ts";
+export { useAppState } from "./useAppState.ts";
