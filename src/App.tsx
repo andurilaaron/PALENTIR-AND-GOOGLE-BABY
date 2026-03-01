@@ -4,7 +4,10 @@ import { ViewerProvider } from "./core/ViewerContext.tsx";
 import { LayerRegistry } from "./core/LayerRegistry.ts";
 import { DummyLayer } from "./core/DummyLayer.ts";
 import { GoogleTilesLayer } from "./layers/tiles/index.ts";
+import { createPostFxEngine } from "./postfx/index.ts";
+import type { PostFxEngine } from "./postfx/index.ts";
 import { LayerPanel } from "./ui/LayerPanel.tsx";
+import { PostFxPanel } from "./ui/PostFxPanel.tsx";
 
 declare global {
     interface Window {
@@ -15,6 +18,7 @@ declare global {
 export default function App() {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const [viewer, setViewer] = useState<Viewer | null>(null);
+    const [pfxEngine, setPfxEngine] = useState<PostFxEngine | null>(null);
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -53,6 +57,10 @@ export default function App() {
             LayerRegistry.register(new DummyLayer());
             LayerRegistry.register(new GoogleTilesLayer());
 
+            // Initialize PostFX engine
+            const engine = createPostFxEngine(v);
+            setPfxEngine(engine);
+
             // Expose viewer to React tree
             setViewer(v);
         })();
@@ -60,6 +68,7 @@ export default function App() {
         return () => {
             cancelled = true;
             if (v) {
+                pfxEngine?.destroy();
                 LayerRegistry.detach();
                 v.destroy();
             }
@@ -74,6 +83,7 @@ export default function App() {
 
                 {/* UI overlays */}
                 <LayerPanel />
+                <PostFxPanel engine={pfxEngine} />
             </div>
         </ViewerProvider>
     );
