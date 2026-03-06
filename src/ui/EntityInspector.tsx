@@ -10,7 +10,7 @@ import "./styles/entity-inspector.css";
 export interface InspectedEntity {
     id: string;
     name: string;
-    type: "flight" | "military-flight" | "satellite" | "earthquake" | "crime" | "cctv" | "unknown";
+    type: "flight" | "military-flight" | "satellite" | "earthquake" | "crime" | "cctv" | "detection" | "unknown";
     properties: Record<string, any>;
 }
 
@@ -26,6 +26,7 @@ const TYPE_META: Record<string, { icon: string; color: string; label: string }> 
     "earthquake": { icon: "🌍", color: "#f59e0b", label: "SEISMIC EVENT" },
     "crime": { icon: "🚨", color: "#f97316", label: "CRIME REPORT" },
     "cctv": { icon: "📹", color: "#22c55e", label: "CCTV CAMERA" },
+    "detection": { icon: "🚗", color: "#d4a017", label: "VEHICLE DETECT" },
     "unknown": { icon: "📍", color: "#9ca3af", label: "ENTITY" },
 };
 

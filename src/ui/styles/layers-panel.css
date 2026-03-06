@@ -68,6 +68,12 @@
     }
 }
 
+.lp__header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .lp__badge {
     font-size: 0.7rem;
     font-weight: 500;
@@ -76,6 +82,29 @@
     background: rgba(91, 156, 245, 0.15);
     color: #7bb8ff;
     letter-spacing: 0.01em;
+}
+
+.lp__close {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid rgba(100, 140, 200, 0.15);
+    background: rgba(30, 40, 60, 0.5);
+    color: #6b7a94;
+    font-size: 0.7rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    line-height: 1;
+}
+
+.lp__close:hover {
+    background: rgba(248, 113, 113, 0.15);
+    border-color: rgba(248, 113, 113, 0.3);
+    color: #f87171;
 }
 
 /* ── Layer list ────────────────────────── */
@@ -195,6 +224,30 @@
     50% {
         opacity: 0.4;
     }
+}
+
+/* ── Time-awareness badges ────────────── */
+.lp__time-badge {
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+    text-transform: uppercase;
+}
+
+.lp__time-badge--live {
+    background: rgba(34, 211, 238, 0.15);
+    color: #22d3ee;
+    border: 1px solid rgba(34, 211, 238, 0.3);
+}
+
+.lp__time-badge--snap {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
 }
 
 /* ── Empty state ───────────────────────── */

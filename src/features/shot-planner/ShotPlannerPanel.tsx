@@ -1,8 +1,11 @@
 /**
  * ShotPlannerPanel — UI for saving/recalling camera positions on the globe.
+ * Phase 5 adds time capture, time-aware recall, and inline rename.
  */
 import { useCallback, useEffect, useState } from "react";
 import { useViewer } from "../../core/ViewerContext.tsx";
+import { AppState } from "../../core/AppState.ts";
+import { ClockController } from "../playback/ClockController.ts";
 import { ShotPlannerStore } from "./ShotPlannerStore.ts";
 import type { CameraShot } from "./ShotPlannerStore.ts";
 import "./shot-planner.css";
@@ -13,6 +16,8 @@ export function ShotPlannerPanel() {
         ShotPlannerStore.getAll()
     );
     const [isOpen, setIsOpen] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editName, setEditName] = useState("");
 
     useEffect(() => {
         const unsub = ShotPlannerStore.subscribe(() => {
@@ -21,13 +26,20 @@ export function ShotPlannerPanel() {
         return unsub;
     }, []);
 
-    const handleSave = useCallback(() => {
+    const handleSave = useCallback(async () => {
         if (!viewer) return;
 
+        const Cesium = await import("cesium");
         const camera = viewer.camera;
         const pos = camera.positionCartographic;
 
         const name = `Shot ${shots.length + 1}`;
+
+        // Capture clock time
+        const timeIso = Cesium.JulianDate.toIso8601(viewer.clock.currentTime);
+
+        // Capture playback range if set
+        const playback = AppState.getState().playback;
 
         ShotPlannerStore.save({
             name,
@@ -37,6 +49,9 @@ export function ShotPlannerPanel() {
             heading: (camera.heading * 180) / Math.PI,
             pitch: (camera.pitch * 180) / Math.PI,
             roll: (camera.roll * 180) / Math.PI,
+            timeIso,
+            startIso: playback.startIso ?? undefined,
+            stopIso: playback.stopIso ?? undefined,
         });
     }, [viewer, shots.length]);
 
@@ -59,6 +74,17 @@ export function ShotPlannerPanel() {
                 },
                 duration: 2.0,
             });
+
+            // Restore time if captured
+            if (shot.timeIso) {
+                ClockController.seekTo(shot.timeIso);
+                ClockController.pause();
+            }
+
+            // Restore time range if captured
+            if (shot.startIso && shot.stopIso) {
+                ClockController.setRange(shot.startIso, shot.stopIso);
+            }
         },
         [viewer]
     );
@@ -66,6 +92,30 @@ export function ShotPlannerPanel() {
     const handleDelete = useCallback((id: string) => {
         ShotPlannerStore.remove(id);
     }, []);
+
+    const handleStartRename = useCallback((shot: CameraShot) => {
+        setEditingId(shot.id);
+        setEditName(shot.name);
+    }, []);
+
+    const handleCommitRename = useCallback(() => {
+        if (editingId && editName.trim()) {
+            ShotPlannerStore.rename(editingId, editName.trim());
+        }
+        setEditingId(null);
+        setEditName("");
+    }, [editingId, editName]);
+
+    const handleRenameKeyDown = useCallback(
+        (e: React.KeyboardEvent) => {
+            if (e.key === "Enter") handleCommitRename();
+            if (e.key === "Escape") {
+                setEditingId(null);
+                setEditName("");
+            }
+        },
+        [handleCommitRename]
+    );
 
     return (
         <div className="sp-anchor">
@@ -104,10 +154,35 @@ export function ShotPlannerPanel() {
                                         onClick={() => handleRecall(shot)}
                                         title={`Fly to ${shot.name}`}
                                     >
-                                        <span className="sp__shot-name">{shot.name}</span>
+                                        {editingId === shot.id ? (
+                                            <input
+                                                className="sp__rename-input"
+                                                value={editName}
+                                                onChange={(e) => setEditName(e.target.value)}
+                                                onBlur={handleCommitRename}
+                                                onKeyDown={handleRenameKeyDown}
+                                                onClick={(e) => e.stopPropagation()}
+                                                autoFocus
+                                            />
+                                        ) : (
+                                            <span
+                                                className="sp__shot-name"
+                                                onDoubleClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleStartRename(shot);
+                                                }}
+                                            >
+                                                {shot.name}
+                                            </span>
+                                        )}
                                         <span className="sp__shot-coords">
-                                            {shot.latitude.toFixed(2)}°, {shot.longitude.toFixed(2)}°
+                                            {shot.latitude.toFixed(2)}&deg;, {shot.longitude.toFixed(2)}&deg;
                                         </span>
+                                        {shot.timeIso && (
+                                            <span className="sp__shot-time">
+                                                {new Date(shot.timeIso).toISOString().replace("T", " ").substring(0, 19)}
+                                            </span>
+                                        )}
                                     </button>
                                     <button
                                         className="sp__delete-btn"

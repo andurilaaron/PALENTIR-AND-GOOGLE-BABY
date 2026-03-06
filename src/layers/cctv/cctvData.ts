@@ -11,6 +11,7 @@ export interface CCTVCamera {
     status: "online" | "offline" | "maintenance";
     type: "fixed" | "ptz" | "dome";
     location: string;
+    streamUrl?: string;
 }
 
 export const SAMPLE_CAMERAS: CCTVCamera[] = [
@@ -22,6 +23,7 @@ export const SAMPLE_CAMERAS: CCTVCamera[] = [
         status: "online",
         type: "ptz",
         location: "Sydney, Australia",
+        streamUrl: "https://www.youtube.com/embed/5uZa3-RMFos?autoplay=1&mute=1",
     },
     {
         id: "cam-002",
@@ -31,6 +33,7 @@ export const SAMPLE_CAMERAS: CCTVCamera[] = [
         status: "online",
         type: "dome",
         location: "Sydney, Australia",
+        streamUrl: "https://www.youtube.com/embed/6Xxb5uikewE?autoplay=1&mute=1",
     },
     {
         id: "cam-003",
@@ -49,41 +52,46 @@ export const SAMPLE_CAMERAS: CCTVCamera[] = [
         status: "online",
         type: "ptz",
         location: "New York, USA",
+        streamUrl: "https://www.youtube.com/embed/AdUw5RdyZxI?autoplay=1&mute=1",
     },
     {
         id: "cam-005",
-        name: "Piccadilly Circus",
-        longitude: -0.1340,
-        latitude: 51.5099,
+        name: "Walworth Road",
+        longitude: -0.0943,
+        latitude: 51.4925,
         status: "online",
         type: "dome",
         location: "London, UK",
+        streamUrl: "https://www.youtube.com/embed/8JCk5M_xrBs?autoplay=1&mute=1",
     },
     {
         id: "cam-006",
         name: "Shibuya Crossing",
         longitude: 139.7006,
         latitude: 35.6595,
-        status: "maintenance",
+        status: "online",
         type: "ptz",
         location: "Tokyo, Japan",
+        streamUrl: "https://www.youtube.com/embed/8H3nRCFVR6Y?autoplay=1&mute=1",
     },
     {
         id: "cam-007",
-        name: "Eiffel Tower Base",
-        longitude: 2.2945,
-        latitude: 48.8584,
+        name: "Shinjuku Intersection",
+        longitude: 139.7005,
+        latitude: 35.6938,
         status: "online",
         type: "fixed",
-        location: "Paris, France",
+        location: "Tokyo, Japan",
+        streamUrl: "https://www.youtube.com/embed/6dp-bvQ7RWo?autoplay=1&mute=1",
     },
     {
         id: "cam-008",
-        name: "Bondi Beach",
-        longitude: 151.2749,
-        latitude: -33.8908,
+        name: "Coney Island Beach",
+        longitude: -73.9790,
+        latitude: 40.5749,
         status: "online",
         type: "dome",
-        location: "Sydney, Australia",
+        location: "New York, USA",
+        streamUrl: "https://www.youtube.com/embed/H67j7H-7QD0?autoplay=1&mute=1",
     },
 ];

@@ -4,7 +4,16 @@
  * Provides global app state with subscribe/notify pattern.
  */
 
-export type EffectMode = "NORMAL" | "CRT" | "NVG" | "THERMAL";
+export type EffectMode = "NORMAL" | "CRT" | "NVG" | "THERMAL" | "EDGE" | "RADAR" | "MOSAIC" | "BLUEPRINT";
+
+export interface PlaybackState {
+    isPlaying: boolean;
+    multiplier: number;
+    mode: "live" | "historical";
+    startIso: string | null;
+    stopIso: string | null;
+    currentIso: string;
+}
 
 export interface AppStateShape {
     ui: {
@@ -13,18 +22,29 @@ export interface AppStateShape {
     layers: Record<string, boolean>;
     effects: {
         mode: EffectMode;
+        settings: Partial<Record<EffectMode, Record<string, number>>>;
     };
+    playback: PlaybackState;
 }
 
 export type StateListener = (state: AppStateShape) => void;
 
 const initialState: AppStateShape = {
     ui: {
-        isLayersOpen: true,
+        isLayersOpen: false,
     },
     layers: {},
     effects: {
         mode: "NORMAL",
+        settings: {},
+    },
+    playback: {
+        isPlaying: true,
+        multiplier: 1,
+        mode: "live",
+        startIso: null,
+        stopIso: null,
+        currentIso: new Date().toISOString(),
     },
 };
 
@@ -37,14 +57,50 @@ class _AppState {
     }
 
     setState(partial: Partial<AppStateShape>): void {
+        // Deep-merge effects.settings per-mode
+        const prevSettings = this.state.effects.settings;
+        const incomingEffects = partial.effects ?? {};
+        const incomingSettings = (incomingEffects as any).settings;
+        let mergedSettings = prevSettings;
+        if (incomingSettings) {
+            mergedSettings = { ...prevSettings };
+            for (const mode of Object.keys(incomingSettings) as EffectMode[]) {
+                mergedSettings[mode] = {
+                    ...(prevSettings[mode] ?? {}),
+                    ...incomingSettings[mode],
+                };
+            }
+        }
+
         this.state = {
             ...this.state,
             ...partial,
             ui: { ...this.state.ui, ...(partial.ui ?? {}) },
-            effects: { ...this.state.effects, ...(partial.effects ?? {}) },
+            effects: {
+                ...this.state.effects,
+                ...(partial.effects ?? {}),
+                settings: mergedSettings,
+            },
             layers: { ...this.state.layers, ...(partial.layers ?? {}) },
+            playback: { ...this.state.playback, ...(partial.playback ?? {}) },
         };
         this.notify();
+    }
+
+    /** Set a single uniform value for a specific effect mode */
+    setUniform(mode: EffectMode, name: string, value: number): void {
+        this.setState({
+            effects: {
+                settings: {
+                    [mode]: { [name]: value },
+                },
+            } as any,
+        });
+    }
+
+    /** Get all current settings for a mode (returns empty object if none set) */
+    getEffectSettings(mode: EffectMode): Record<string, number> {
+        return this.state.effects.settings[mode] ?? {};
     }
 
     subscribe(listener: StateListener): () => void {

@@ -2,6 +2,7 @@
  * ShotPlannerStore — Save and recall camera positions using localStorage.
  *
  * Each "shot" stores: name, position (lon, lat, height), heading, pitch, roll.
+ * Phase 5 adds optional time fields for time-aware bookmarks.
  */
 
 export interface CameraShot {
@@ -14,6 +15,14 @@ export interface CameraShot {
     pitch: number;
     roll: number;
     createdAt: number;
+    /** Clock time at moment of save */
+    timeIso?: string;
+    /** Free-text descriptor */
+    incidentLabel?: string;
+    /** Saved time range start */
+    startIso?: string;
+    /** Saved time range end */
+    stopIso?: string;
 }
 
 const STORAGE_KEY = "palentir_camera_shots";
@@ -46,6 +55,15 @@ class _ShotPlannerStore {
         this.shots = this.shots.filter((s) => s.id !== id);
         this.persist();
         this.notify();
+    }
+
+    rename(id: string, name: string): void {
+        const shot = this.shots.find((s) => s.id === id);
+        if (shot) {
+            shot.name = name;
+            this.persist();
+            this.notify();
+        }
     }
 
     clear(): void {

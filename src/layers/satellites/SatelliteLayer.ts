@@ -3,6 +3,7 @@ import type {
     LayerPlugin,
     LayerCategory,
     LayerStatus,
+    TimeAwareness,
 } from "../../core/LayerPlugin.ts";
 import { parseTLE } from "./tleParser.ts";
 import { getSatellitePosition, generateOrbitPolyline } from "./propagator.ts";
@@ -20,6 +21,7 @@ export class SatelliteLayer implements LayerPlugin {
     readonly category: LayerCategory = "satellite";
     readonly icon = "🛰️";
     readonly source = "CelesTrak (NORAD)";
+    readonly timeAware: TimeAwareness = "full";
 
     enabled = false;
     status: LayerStatus = "idle";

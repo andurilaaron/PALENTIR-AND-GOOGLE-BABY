@@ -18,6 +18,8 @@ export type LayerCategory =
 
 export type LayerStatus = "idle" | "loading" | "ready" | "error";
 
+export type TimeAwareness = "full" | "snapshot" | "none";
+
 export interface LayerPlugin {
     /** Unique identifier */
     readonly id: string;
@@ -33,6 +35,9 @@ export interface LayerPlugin {
 
     /** Source data provider for the UI panel */
     readonly source?: string;
+
+    /** How this layer responds to clock time changes */
+    readonly timeAware?: TimeAwareness;
 
     /** How many entities are currently active */
     entityCount?: number;
@@ -63,4 +68,10 @@ export interface LayerPlugin {
      * Use for real-time position updates, animations, etc.
      */
     onTick?(viewer: Viewer, time: JulianDate): void;
+
+    /**
+     * Optional — called when the clock is explicitly seeked to a new time.
+     * Use for re-fetching historical data or repositioning entities.
+     */
+    onSeek?(viewer: Viewer, isoString: string): void | Promise<void>;
 }

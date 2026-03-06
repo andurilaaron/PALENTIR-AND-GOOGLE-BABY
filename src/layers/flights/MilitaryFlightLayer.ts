@@ -3,6 +3,7 @@ import type {
     LayerPlugin,
     LayerCategory,
     LayerStatus,
+    TimeAwareness,
 } from "../../core/LayerPlugin.ts";
 import { fetchMilitaryAircraft } from "./adsbApi.ts";
 import type { Aircraft } from "./adsbApi.ts";
@@ -22,6 +23,7 @@ export class MilitaryFlightLayer implements LayerPlugin {
     readonly category: LayerCategory = "flights";
     readonly icon = "🎖️";
     readonly source = "airplanes.live";
+    readonly timeAware: TimeAwareness = "snapshot";
 
     enabled = false;
     status: LayerStatus = "idle";

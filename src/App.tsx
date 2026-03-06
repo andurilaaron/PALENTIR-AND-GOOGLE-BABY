@@ -6,18 +6,24 @@ import { GoogleTilesLayer } from "./layers/tiles/index.ts";
 import { FlightLayer, MilitaryFlightLayer } from "./layers/flights/index.ts";
 import { SatelliteLayer } from "./layers/satellites/index.ts";
 import { EarthquakeLayer } from "./layers/earthquakes/index.ts";
-import { TrafficLayer } from "./layers/traffic/index.ts";
+import { TrafficLayer, TrafficParticleLayer } from "./layers/traffic/index.ts";
 import { StreetTrafficLayer } from "./layers/traffic/StreetTrafficLayer.ts";
 import { CCTVLayer } from "./layers/cctv/index.ts";
 import { WeatherRadarLayer } from "./layers/weather/WeatherRadarLayer.ts";
+import { SatelliteImageryLayer } from "./layers/imagery/index.ts";
 import { CrimeLayer } from "./layers/crime/CrimeLayer.ts";
+import { VehicleDetectionLayer } from "./layers/detection/index.ts";
 import { createPostFxEngine } from "./postfx/index.ts";
 import type { PostFxEngine } from "./postfx/index.ts";
+import { ClockController } from "./features/playback/index.ts";
 import { LayerPanel } from "./ui/LayerPanel.tsx";
 import { PostFxPanel } from "./ui/PostFxPanel.tsx";
-import { ShotPlannerPanel } from "./features/shot-planner/index.ts";
+import { PlaybackBar } from "./features/playback/index.ts";
+import { ShotPlannerPanel } from "./features/shot-planner/ShotPlannerPanel.tsx";
 import { EntityInspector } from "./ui/EntityInspector.tsx";
 import type { InspectedEntity } from "./ui/EntityInspector.tsx";
+import { CCTVFeedPanel } from "./ui/CCTVFeedPanel.tsx";
+import type { CCTVCamera } from "./layers/cctv/cctvData.ts";
 
 declare global {
     interface Window {
@@ -30,6 +36,13 @@ export default function App() {
     const [viewer, setViewer] = useState<Viewer | null>(null);
     const [pfxEngine, setPfxEngine] = useState<PostFxEngine | null>(null);
     const [inspectedEntity, setInspectedEntity] = useState<InspectedEntity | null>(null);
+
+    // Derive selected CCTV camera from inspected entity
+    const cctvRecord: CCTVCamera | null =
+        inspectedEntity?.type === "cctv"
+            ? (inspectedEntity.properties.record as CCTVCamera) ?? null
+            : null;
+    const cctvId = cctvRecord ? inspectedEntity!.id : null;
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -69,10 +82,16 @@ export default function App() {
             LayerRegistry.register(new EarthquakeLayer());
             LayerRegistry.register(new SatelliteLayer());
             LayerRegistry.register(new WeatherRadarLayer());
+            LayerRegistry.register(new SatelliteImageryLayer());
             LayerRegistry.register(new CrimeLayer());
             LayerRegistry.register(new TrafficLayer());
             LayerRegistry.register(new StreetTrafficLayer());
+            LayerRegistry.register(new TrafficParticleLayer());
             LayerRegistry.register(new CCTVLayer());
+            LayerRegistry.register(new VehicleDetectionLayer());
+
+            // Initialize clock controller after layers are registered
+            await ClockController.attach(v);
 
             const engine = createPostFxEngine(v);
             setPfxEngine(engine);
@@ -127,6 +146,8 @@ export default function App() {
                     }
                 } else if (props.isCrime) {
                     type = "crime";
+                } else if (props.isDetection) {
+                    type = "detection";
                 }
 
                 setInspectedEntity({
@@ -144,6 +165,7 @@ export default function App() {
             cancelled = true;
             if (v) {
                 pfxEngine?.destroy();
+                ClockController.detach();
                 LayerRegistry.detach();
                 v.destroy();
             }
@@ -157,7 +179,13 @@ export default function App() {
 
                 <LayerPanel />
                 <PostFxPanel engine={pfxEngine} />
+                <CCTVFeedPanel
+                    cameraId={cctvId}
+                    record={cctvRecord}
+                    onClose={() => setInspectedEntity(null)}
+                />
                 <ShotPlannerPanel />
+                <PlaybackBar />
 
                 {/* Unified entity inspector — handles ALL entity types */}
                 <EntityInspector

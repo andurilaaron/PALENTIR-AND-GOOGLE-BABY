@@ -1,0 +1,429 @@
+/* ========================================
+   Playback Dock — Full-width bottom bar
+   Multi-row: Timeline | Controls | Layers | Legend
+   ======================================== */
+
+/* ── Dock container ───────────────────── */
+.pb-dock {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: rgba(10, 16, 28, 0.92);
+    backdrop-filter: blur(18px) saturate(1.4);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    border-top: 1px solid rgba(100, 140, 200, 0.18);
+    box-shadow:
+        0 -4px 30px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    color: #dce8f8;
+    pointer-events: auto;
+}
+
+/* ── Generic row ──────────────────────── */
+.pb-row {
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+}
+
+/* ── Row 1: Timeline ──────────────────── */
+.pb-row--timeline {
+    padding: 10px 20px 8px;
+    gap: 12px;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.08);
+}
+
+/* Play / Pause button */
+.pb__playpause {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: 1px solid rgba(100, 140, 200, 0.2);
+    background: rgba(30, 40, 60, 0.6);
+    color: #b0c8e8;
+    font-size: 0.85rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    line-height: 1;
+}
+
+.pb__playpause:hover {
+    background: rgba(91, 156, 245, 0.15);
+    border-color: rgba(91, 156, 245, 0.3);
+    color: #dce8f8;
+}
+
+/* Timeline scrubber wrapper */
+.pb__timeline-wrap {
+    flex: 1;
+    position: relative;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+}
+
+/* Scrubber track */
+.pb__scrubber {
+    width: 100%;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(80, 100, 140, 0.3);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+.pb__scrubber:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.pb__scrubber::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22d3ee;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+}
+
+.pb__scrubber::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22d3ee;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 8px rgba(34, 211, 238, 0.5);
+}
+
+.pb__scrubber:disabled::-webkit-slider-thumb {
+    background: #5a6a82;
+    box-shadow: none;
+}
+
+.pb__scrubber:disabled::-moz-range-thumb {
+    background: #5a6a82;
+    box-shadow: none;
+}
+
+/* Event markers overlay (future: absolute-positioned dots on timeline) */
+.pb__event-markers {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    pointer-events: none;
+    height: 6px;
+}
+
+/* Time readout */
+.pb__time {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    min-width: 175px;
+    text-align: right;
+}
+
+.pb__time--live {
+    color: #4ade80;
+    animation: pb-live-glow 2s ease-in-out infinite;
+}
+
+.pb__time--hist {
+    color: #fbbf24;
+}
+
+@keyframes pb-live-glow {
+    0%, 100% { text-shadow: 0 0 8px rgba(34, 197, 94, 0.3); }
+    50% { text-shadow: 0 0 14px rgba(34, 197, 94, 0.6); }
+}
+
+/* ── Row 2: Controls ──────────────────── */
+.pb-row--controls {
+    padding: 6px 20px;
+    gap: 6px;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.08);
+}
+
+/* Mode toggle group (LIVE / PLAYBACK) */
+.pb__mode-group {
+    display: flex;
+    gap: 2px;
+    background: rgba(20, 30, 50, 0.5);
+    border-radius: 6px;
+    padding: 2px;
+    border: 1px solid rgba(100, 140, 200, 0.1);
+}
+
+.pb__mode-btn {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 4px 14px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: #5a6a82;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+}
+
+.pb__mode-btn:hover {
+    color: #8899b3;
+}
+
+.pb__mode-btn--active.pb__mode-btn--live {
+    background: rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.15);
+}
+
+.pb__mode-btn--active.pb__mode-btn--playback {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+
+/* Vertical divider */
+.pb__divider {
+    width: 1px;
+    height: 20px;
+    background: rgba(100, 140, 200, 0.15);
+    flex-shrink: 0;
+    margin: 0 6px;
+}
+
+/* Speed button group */
+.pb__speed-group {
+    display: flex;
+    gap: 2px;
+}
+
+.pb__speed {
+    font-size: 0.58rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid rgba(100, 140, 200, 0.1);
+    background: rgba(30, 40, 60, 0.4);
+    color: #5a6a82;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.pb__speed:hover {
+    color: #b0c8e8;
+    background: rgba(40, 55, 80, 0.5);
+}
+
+.pb__speed--active {
+    background: rgba(91, 156, 245, 0.2);
+    border-color: rgba(91, 156, 245, 0.35);
+    color: #5b9cf5;
+}
+
+/* Control button (RANGE, etc.) */
+.pb__ctrl-btn {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(100, 140, 200, 0.15);
+    background: rgba(30, 40, 60, 0.5);
+    color: #5a6a82;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    margin-left: auto;
+}
+
+.pb__ctrl-btn:hover {
+    color: #b0c8e8;
+}
+
+.pb__ctrl-btn--active {
+    background: rgba(91, 156, 245, 0.15);
+    border-color: rgba(91, 156, 245, 0.3);
+    color: #5b9cf5;
+}
+
+/* ── Range editor row (conditional) ───── */
+.pb-row--range {
+    padding: 6px 20px;
+    gap: 10px;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.08);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.pb__range-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #6b7a94;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+}
+
+.pb__range-input {
+    font-family: ui-monospace, monospace;
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    border-radius: 4px;
+    border: 1px solid rgba(100, 140, 200, 0.2);
+    background: rgba(20, 30, 50, 0.8);
+    color: #dce8f8;
+    outline: none;
+}
+
+.pb__range-input:focus {
+    border-color: rgba(91, 156, 245, 0.4);
+}
+
+.pb__range-apply,
+.pb__range-clear {
+    font-size: 0.58rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    letter-spacing: 0.05em;
+}
+
+.pb__range-apply {
+    border: 1px solid rgba(34, 197, 94, 0.3);
+    background: rgba(34, 197, 94, 0.12);
+    color: #4ade80;
+}
+
+.pb__range-apply:hover {
+    background: rgba(34, 197, 94, 0.25);
+}
+
+.pb__range-clear {
+    border: 1px solid rgba(248, 113, 113, 0.3);
+    background: rgba(248, 113, 113, 0.08);
+    color: #f87171;
+}
+
+.pb__range-clear:hover {
+    background: rgba(248, 113, 113, 0.2);
+}
+
+/* ── Row 3: Layer pills ───────────────── */
+.pb-row--layers {
+    padding: 6px 20px;
+    gap: 6px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.06);
+}
+
+.pb__pill {
+    font-size: 0.6rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(100, 140, 200, 0.12);
+    background: rgba(30, 40, 60, 0.4);
+    color: #5a6a82;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.pb__pill:hover {
+    background: rgba(91, 156, 245, 0.06);
+    color: #8899b3;
+    border-color: rgba(100, 140, 200, 0.2);
+}
+
+/* Active pill — border/color set via inline style */
+.pb__pill--on {
+    font-weight: 600;
+}
+
+.pb__pill-icon {
+    font-size: 0.7rem;
+    line-height: 1;
+}
+
+.pb__pill-count {
+    font-size: 0.48rem;
+    font-weight: 700;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    margin-left: 1px;
+}
+
+/* Detail button (opens side panel) */
+.pb__pill-detail {
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-left: auto;
+    color: #5a6a82;
+    border-color: rgba(100, 140, 200, 0.15);
+    background: rgba(30, 40, 60, 0.5);
+}
+
+.pb__pill-detail:hover {
+    color: #b0c8e8;
+    background: rgba(91, 156, 245, 0.1);
+}
+
+.pb__pill-detail--open {
+    background: rgba(91, 156, 245, 0.15);
+    border-color: rgba(91, 156, 245, 0.3);
+    color: #5b9cf5;
+}
+
+/* ── Row 4: Event category legend ─────── */
+.pb-row--legend {
+    padding: 5px 20px 7px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.pb__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.55rem;
+    font-weight: 500;
+    color: #5a6a82;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+}
+
+.pb__legend-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 4px currentColor;
+}
