@@ -73,6 +73,7 @@ export class CCTVLayer implements LayerPlugin {
                     show: true,
                 },
                 description: this.buildDescription(cam),
+                properties: { isCCTV: true, record: cam },
             });
 
             this.entityIds.push(cam.id);

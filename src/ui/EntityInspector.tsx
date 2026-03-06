@@ -10,7 +10,7 @@ import "./styles/entity-inspector.css";
 export interface InspectedEntity {
     id: string;
     name: string;
-    type: "flight" | "military-flight" | "satellite" | "earthquake" | "crime" | "unknown";
+    type: "flight" | "military-flight" | "satellite" | "earthquake" | "crime" | "cctv" | "unknown";
     properties: Record<string, any>;
 }
 
@@ -25,6 +25,7 @@ const TYPE_META: Record<string, { icon: string; color: string; label: string }> 
     "satellite": { icon: "🛰️", color: "#4cd6e4", label: "SATELLITE" },
     "earthquake": { icon: "🌍", color: "#f59e0b", label: "SEISMIC EVENT" },
     "crime": { icon: "🚨", color: "#f97316", label: "CRIME REPORT" },
+    "cctv": { icon: "📹", color: "#22c55e", label: "CCTV CAMERA" },
     "unknown": { icon: "📍", color: "#9ca3af", label: "ENTITY" },
 };
 
@@ -208,6 +209,15 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
             if (p.city) rows.push({ label: "CITY", value: p.city });
             if (p.type) rows.push({ label: "CATEGORY", value: p.type });
             rows.push({ label: "SOURCE", value: "ABS.gov.au" });
+        }
+
+        if (entity.type === "cctv") {
+            if (p.status) rows.push({ label: "STATUS", value: p.status.toUpperCase() });
+            if (p.type) rows.push({ label: "TYPE", value: p.type.toUpperCase() });
+            if (p.location) rows.push({ label: "LOCATION", value: p.location });
+            if (p.latitude != null && p.longitude != null) {
+                rows.push({ label: "COORDS", value: `${p.latitude.toFixed(4)}°, ${p.longitude.toFixed(4)}°` });
+            }
         }
 
         return rows;

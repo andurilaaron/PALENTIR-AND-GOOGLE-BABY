@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import type { Viewer } from "cesium";
 import { ViewerProvider } from "./core/ViewerContext.tsx";
 import { LayerRegistry } from "./core/LayerRegistry.ts";
-import { DummyLayer } from "./core/DummyLayer.ts";
 import { GoogleTilesLayer } from "./layers/tiles/index.ts";
 import { FlightLayer, MilitaryFlightLayer } from "./layers/flights/index.ts";
 import { SatelliteLayer } from "./layers/satellites/index.ts";
@@ -64,7 +63,6 @@ export default function App() {
             LayerRegistry.attach(v);
 
             // Register all layers
-            LayerRegistry.register(new DummyLayer());
             LayerRegistry.register(new GoogleTilesLayer());
             LayerRegistry.register(new FlightLayer());
             LayerRegistry.register(new MilitaryFlightLayer());
@@ -121,6 +119,12 @@ export default function App() {
                     }
                 } else if (props.isEarthquake) {
                     type = "earthquake";
+                } else if (props.isCCTV) {
+                    type = "cctv";
+                    const record = props.record;
+                    if (record && typeof record === "object") {
+                        Object.assign(props, record);
+                    }
                 } else if (props.isCrime) {
                     type = "crime";
                 }
