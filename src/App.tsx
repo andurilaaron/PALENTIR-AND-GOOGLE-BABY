@@ -4,6 +4,7 @@ import { ViewerProvider } from "./core/ViewerContext.tsx";
 import { LayerRegistry } from "./core/LayerRegistry.ts";
 import { DummyLayer } from "./core/DummyLayer.ts";
 import { GoogleTilesLayer } from "./layers/tiles/index.ts";
+import { FlightLayer } from "./layers/flights/index.ts";
 import { createPostFxEngine } from "./postfx/index.ts";
 import type { PostFxEngine } from "./postfx/index.ts";
 import { LayerPanel } from "./ui/LayerPanel.tsx";
@@ -56,6 +57,7 @@ export default function App() {
             // Register layers
             LayerRegistry.register(new DummyLayer());
             LayerRegistry.register(new GoogleTilesLayer());
+            LayerRegistry.register(new FlightLayer());
 
             // Initialize PostFX engine
             const engine = createPostFxEngine(v);
