@@ -28,6 +28,18 @@ export interface LayerPlugin {
     /** Category for grouping in the layer panel */
     readonly category: LayerCategory;
 
+    /** Icon for the UI panel */
+    readonly icon?: string;
+
+    /** Source data provider for the UI panel */
+    readonly source?: string;
+
+    /** How many entities are currently active */
+    entityCount?: number;
+
+    /** Timestamp of last data refresh */
+    lastRefresh?: number;
+
     /** Whether the layer is currently enabled */
     enabled: boolean;
 

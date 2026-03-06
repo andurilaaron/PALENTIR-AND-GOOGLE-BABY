@@ -61,7 +61,14 @@ export class EarthquakeLayer implements LayerPlugin {
                         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                         pixelOffset: new Cesium.Cartesian2(0, -size - 2),
                         disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                        show: mag >= 4.0, // Only show labels for M4+
+                        show: mag >= 4.0,
+                    },
+                    properties: {
+                        isEarthquake: true,
+                        mag,
+                        place,
+                        depth,
+                        time: feature.properties.time,
                     },
                 });
 

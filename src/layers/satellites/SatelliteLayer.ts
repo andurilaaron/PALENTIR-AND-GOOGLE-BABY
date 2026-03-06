@@ -5,7 +5,7 @@ import type {
     LayerStatus,
 } from "../../core/LayerPlugin.ts";
 import { parseTLE } from "./tleParser.ts";
-import { getSatellitePosition } from "./propagator.ts";
+import { getSatellitePosition, generateOrbitPolyline } from "./propagator.ts";
 import type { SatelliteRecord } from "./types.ts";
 
 const TLE_URL =
@@ -79,6 +79,13 @@ export class SatelliteLayer implements LayerPlugin {
                         backgroundColor: Cesium.Color.fromCssColorString("#0a101c").withAlpha(0.8),
                         disableDepthTestDistance: Number.POSITIVE_INFINITY,
                         distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000000), // Hide when zoomed out
+                    },
+                    polyline: {
+                        show: new Cesium.CallbackProperty(() => viewer.selectedEntity?.id === id, false),
+                        positions: generateOrbitPolyline(record.satrec, now),
+                        width: 2,
+                        material: color.withAlpha(0.5),
+                        arcType: Cesium.ArcType.NONE
                     },
                     properties: {
                         isSatellite: true,

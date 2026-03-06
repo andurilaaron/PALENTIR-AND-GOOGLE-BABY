@@ -44,3 +44,28 @@ export function getSatelliteVelocity(
     const speedKmS = Math.sqrt(vx * vx + vy * vy + vz * vz);
     return speedKmS;
 }
+
+/**
+ * Generates an array of positions projecting the satellite's future orbit in Earth-fixed coordinates.
+ * This draws the familiar orbital path sine-waves around the rotating globe.
+ */
+export function generateOrbitPolyline(
+    satrec: satellite.SatRec,
+    startDate: Date,
+    durationMinutes = 90, // Roughly one LEO orbit
+    stepMinutes = 2 // 1 sample every 2 minutes
+): Cesium.Cartesian3[] | undefined {
+    const points: Cesium.Cartesian3[] = [];
+
+    for (let i = 0; i <= durationMinutes; i += stepMinutes) {
+        const time = new Date(startDate.getTime() + i * 60000);
+        const position = getSatellitePosition(satrec, time);
+        if (position) {
+            points.push(position);
+        }
+    }
+
+    if (points.length < 2) return undefined;
+
+    return points;
+}

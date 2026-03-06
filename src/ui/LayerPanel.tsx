@@ -49,14 +49,29 @@ export function LayerPanel() {
                                         />
                                         <span className="lp__switch-slider" />
                                     </span>
-                                    <span className="lp__layer-name">{layer.label}</span>
+                                    <div className="lp__layer-info">
+                                        <div className="lp__layer-name">
+                                            {layer.icon && <span className="lp__layer-emoji">{layer.icon}</span>}
+                                            {layer.label}
+                                        </div>
+                                        {layer.source && (
+                                            <div className="lp__layer-sub">
+                                                {layer.source} &middot; {layer.lastRefresh ? "active" : "standby"}
+                                            </div>
+                                        )}
+                                    </div>
                                 </label>
-                                <span
-                                    className={`lp__status lp__status--${layer.status}`}
-                                    title={layer.status}
-                                >
-                                    {layer.status}
-                                </span>
+                                <div className="lp__layer-stats">
+                                    {layer.entityCount !== undefined && layer.entityCount > 0 && (
+                                        <span className="lp__count">{layer.entityCount >= 1000 ? (layer.entityCount / 1000).toFixed(1) + "K" : layer.entityCount}</span>
+                                    )}
+                                    <span
+                                        className={`lp__status lp__status--${layer.status}`}
+                                        title={layer.status}
+                                    >
+                                        {layer.enabled ? "ON" : "OFF"}
+                                    </span>
+                                </div>
                             </li>
                         ))}
                     </ul>

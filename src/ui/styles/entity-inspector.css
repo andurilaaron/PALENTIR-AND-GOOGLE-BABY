@@ -1,0 +1,193 @@
+/* ============================================
+   EntityInspector — Unified Entity Click Panel
+   ============================================ */
+
+.ei {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    width: 300px;
+    background: rgba(8, 12, 22, 0.92);
+    -webkit-backdrop-filter: blur(16px) saturate(1.5);
+    backdrop-filter: blur(16px) saturate(1.5);
+    border: 1px solid rgba(91, 156, 245, 0.4);
+    border-radius: 12px;
+    color: #dce8f8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+    box-shadow:
+        0 0 30px color-mix(in srgb, var(--ei-accent, #5b9cf5) 20%, transparent),
+        0 12px 48px rgba(0, 0, 0, 0.6);
+    z-index: 1100;
+    overflow: hidden;
+    animation: ei-in 0.18s ease;
+}
+
+@keyframes ei-in {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Active tracking — animated sweep bar at very top of panel */
+.ei__tracking-bar {
+    height: 3px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            var(--ei-accent, #5b9cf5) 30%,
+            #fff 50%,
+            var(--ei-accent, #5b9cf5) 70%,
+            transparent 100%);
+    background-size: 200% 100%;
+    animation: ei-trail-sweep 1.8s linear infinite;
+}
+
+@keyframes ei-trail-sweep {
+    from {
+        background-position: 200% 0;
+    }
+
+    to {
+        background-position: -200% 0;
+    }
+}
+
+/* Header */
+.ei__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(91, 156, 245, 0.2);
+    background: rgba(91, 156, 245, 0.1);
+}
+
+.ei__header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ei__icon {
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.ei__type {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--ei-accent, #5b9cf5);
+    text-transform: uppercase;
+}
+
+.ei__name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.02em;
+    margin-top: 1px;
+}
+
+.ei__close {
+    background: transparent;
+    border: none;
+    color: #6a8c9e;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+}
+
+.ei__close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Data rows */
+.ei__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ei__label {
+    color: #5a7a94;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ei__value {
+    color: #e0eeff;
+    font-weight: 600;
+    font-size: 0.78rem;
+}
+
+/* Expand button */
+.ei__expand {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #5b8cbf;
+    font-size: 0.68rem;
+    font-family: inherit;
+    padding: 7px 14px;
+    text-align: left;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: color 0.15s;
+}
+
+.ei__expand:hover {
+    color: var(--ei-accent, #5b9cf5);
+}
+
+/* Action buttons */
+.ei__actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.ei__btn {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    color: #c0d8f0;
+    font-size: 0.72rem;
+    font-family: inherit;
+    font-weight: 600;
+    padding: 7px 6px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: all 0.18s;
+    text-align: center;
+}
+
+.ei__btn:hover {
+    background: rgba(91, 156, 245, 0.2);
+    border-color: var(--ei-accent, #5b9cf5);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(91, 156, 245, 0.3);
+}
+
+.ei__btn--active {
+    background: rgba(91, 156, 245, 0.25);
+    border-color: var(--ei-accent, #5b9cf5);
+    color: var(--ei-accent, #5b9cf5);
+}

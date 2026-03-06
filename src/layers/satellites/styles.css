@@ -4,6 +4,7 @@
     right: 24px;
     width: 320px;
     background: rgba(10, 15, 20, 0.85);
+    -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border: 1px solid #4cd6e4;
     border-radius: 8px;
@@ -28,6 +29,31 @@
     font-size: 0.85rem;
     color: #4cd6e4;
     letter-spacing: 0.1em;
+}
+
+.detection-panel__actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.detection-panel__track {
+    background: transparent;
+    border: 1px solid #4cd6e4;
+    border-radius: 4px;
+    color: #4cd6e4;
+    cursor: pointer;
+    font-size: 0.70rem;
+    padding: 3px 8px;
+    font-weight: bold;
+    letter-spacing: 0.05em;
+    transition: all 0.2s;
+}
+
+.detection-panel__track:hover {
+    background: rgba(76, 214, 228, 0.2);
+    color: #fff;
+    box-shadow: 0 0 8px rgba(76, 214, 228, 0.5);
 }
 
 .detection-panel__close {

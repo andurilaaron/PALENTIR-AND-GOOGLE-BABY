@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { SatelliteRecord } from "./types.ts";
 import { getSatelliteVelocity } from "./propagator.ts";
+import { useViewer } from "../../core/ViewerContext.tsx";
 import "./styles.css";
 
 // We need a way to get the selected record from Cesium's entity selection
@@ -10,7 +11,17 @@ interface DetectionPanelProps {
 }
 
 export function DetectionPanel({ record, onClose }: DetectionPanelProps) {
+    const viewer = useViewer();
     const [velocity, setVelocity] = useState<string>("---");
+
+    const trackSatellite = () => {
+        if (!viewer || !record) return;
+        const entity = viewer.entities.getById(`sat-${record.id}`);
+        if (entity) {
+            // Track the satellite (moves camera to follow it)
+            viewer.trackedEntity = entity;
+        }
+    };
 
     useEffect(() => {
         if (!record) return;
@@ -32,7 +43,10 @@ export function DetectionPanel({ record, onClose }: DetectionPanelProps) {
         <div className="detection-panel">
             <header className="detection-panel__header">
                 <h3>🛰️ SIGNAL LOCK: {record.id}</h3>
-                <button onClick={onClose} className="detection-panel__close">X</button>
+                <div className="detection-panel__actions">
+                    <button onClick={trackSatellite} className="detection-panel__track">TRACK</button>
+                    <button onClick={onClose} className="detection-panel__close">X</button>
+                </div>
             </header>
 
             <div className="detection-panel__body">

@@ -4,22 +4,23 @@ import type {
     LayerCategory,
     LayerStatus,
 } from "../../core/LayerPlugin.ts";
-import { fetchAircraft } from "./adsbApi.ts";
+import { fetchMilitaryAircraft } from "./adsbApi.ts";
 import type { Aircraft } from "./adsbApi.ts";
 
-const POLL_INTERVAL_MS = 15000; // 15s — OpenSky allows this comfortably
-const BACKOFF_INTERVALS = [30000, 60000]; // max 60s backoff — don't stay stuck
+const POLL_INTERVAL_MS = 60000;
+const STARTUP_DELAY_MS = 8000;
+const BACKOFF_INTERVALS = [60000, 120000, 300000];
 
 interface FlightState {
     ac: Aircraft;
     lastUpdate: number;
 }
 
-export class FlightLayer implements LayerPlugin {
-    readonly id = "flights";
-    readonly label = "Live Flights";
+export class MilitaryFlightLayer implements LayerPlugin {
+    readonly id = "military-flights";
+    readonly label = "Military Flights";
     readonly category: LayerCategory = "flights";
-    readonly icon = "✈️";
+    readonly icon = "🎖️";
     readonly source = "airplanes.live";
 
     enabled = false;
@@ -27,7 +28,7 @@ export class FlightLayer implements LayerPlugin {
     entityCount?: number;
     lastRefresh?: number;
 
-    // Cached Cesium module — loaded once in onAdd, reused in onTick (fixes window.Cesium bug)
+    // Cached Cesium — loaded once in onAdd, reused in onTick
     private CesiumRef: typeof import("cesium") | null = null;
     private pollTimer: ReturnType<typeof setTimeout> | null = null;
     private stateMap = new Map<string, FlightState>();
@@ -42,11 +43,14 @@ export class FlightLayer implements LayerPlugin {
     }
 
     async onAdd(viewer: Viewer): Promise<void> {
-        // Cache Cesium so onTick can use it without window global
         this.CesiumRef = await import("cesium");
-        await this.updateFlights(viewer);
-        this.schedulePoll(viewer);
-        console.log("[FlightLayer] ✅ Live flight tracking started");
+        // Staggered startup — 8s after civilian FlightLayer
+        setTimeout(async () => {
+            if (!this.enabled) return; // user may have already toggled off
+            await this.updateFlights(viewer);
+            this.schedulePoll(viewer);
+        }, STARTUP_DELAY_MS);
+        console.log(`[MilitaryFlightLayer] ✅ Will start in ${STARTUP_DELAY_MS / 1000}s`);
     }
 
     private schedulePoll(viewer: Viewer): void {
@@ -65,7 +69,6 @@ export class FlightLayer implements LayerPlugin {
             clearTimeout(this.pollTimer);
             this.pollTimer = null;
         }
-        // Collect IDs first to avoid Set mutation during iteration
         const toRemove = [...this.entityIds];
         for (const id of toRemove) {
             const entity = viewer.entities.getById(id);
@@ -74,7 +77,7 @@ export class FlightLayer implements LayerPlugin {
         this.entityIds.clear();
         this.stateMap.clear();
         this.CesiumRef = null;
-        console.log("[FlightLayer] 🔄 Removed");
+        console.log("[MilitaryFlightLayer] 🔄 Removed");
     }
 
     onTick(viewer: Viewer, _time: JulianDate): void {
@@ -88,11 +91,9 @@ export class FlightLayer implements LayerPlugin {
             if (!entity) continue;
 
             const dt = (now - state.lastUpdate) / 1000.0;
-
             const headingRad = state.ac.heading * (Math.PI / 180);
             const dy = state.ac.velocity * dt * Math.cos(headingRad);
             const dx = state.ac.velocity * dt * Math.sin(headingRad);
-
             const dLat = dy / 111111.0;
             const dLon = dx / (111111.0 * Math.cos(state.ac.latitude * (Math.PI / 180)));
 
@@ -105,85 +106,40 @@ export class FlightLayer implements LayerPlugin {
         }
     }
 
-    private getAltitudeColor(altitude: number): string {
-        if (altitude < 3000) return "#4ade80";
-        if (altitude < 9000) return "#fbbf24";
-        return "#60a5fa";
-    }
-
     private async updateFlights(viewer: Viewer): Promise<void> {
         const Cesium = this.CesiumRef!;
 
-        // Always query by point (the /all endpoint is aggressively rate-limited).
-        // Raycast from canvas center to find where the camera is actually looking.
-        // At high altitude the Pick may miss — fall back to camera nadir.
-        let centerLat = 0;
-        let centerLon = 0;
-
-        try {
-            const canvas = viewer.scene.canvas;
-            const ray = viewer.camera.getPickRay(
-                new Cesium.Cartesian2(canvas.clientWidth / 2, canvas.clientHeight / 2)
-            );
-            const hit = ray ? viewer.scene.globe.pick(ray, viewer.scene) : undefined;
-
-            if (hit) {
-                const c = Cesium.Ellipsoid.WGS84.cartesianToCartographic(hit);
-                centerLat = Cesium.Math.toDegrees(c.latitude);
-                centerLon = Cesium.Math.toDegrees(c.longitude);
-            } else {
-                // Horizon/space view — use the nadir directly below camera
-                const cam = viewer.camera.positionCartographic;
-                centerLat = Cesium.Math.toDegrees(cam.latitude);
-                centerLon = Cesium.Math.toDegrees(cam.longitude);
-            }
-        } catch (_e) {
-            // Last resort — camera nadir even if cartographic conversion fails
-            try {
-                const cam = viewer.camera.positionCartographic;
-                centerLat = Cesium.Math.toDegrees(cam.latitude);
-                centerLon = Cesium.Math.toDegrees(cam.longitude);
-            } catch { return; }
-        }
-
-        // Always request maximum 250nm so we get a dense result wherever we're looking
-        const altKm = viewer.camera.positionCartographic.height / 1000;
-        const radiusNm = altKm > 8000 ? 250 : Math.min(250, Math.max(80, altKm * 0.06));
-
-        console.log(`[FlightLayer] 📡 Fetching flights: ${centerLat.toFixed(2)}°, ${centerLon.toFixed(2)}° r=${Math.round(radiusNm)}nm`);
-
         let aircraft: Aircraft[];
         try {
-            aircraft = await fetchAircraft(centerLat, centerLon, radiusNm);
+            aircraft = await fetchMilitaryAircraft();
             this.backoffLevel = 0;
         } catch (err: any) {
             if (err?.message?.includes("429")) {
                 this.backoffLevel = Math.min(this.backoffLevel + 1, BACKOFF_INTERVALS.length);
                 const wait = BACKOFF_INTERVALS[this.backoffLevel - 1] / 1000;
-                console.warn(`[FlightLayer] 🚫 Rate limited (429) — backing off ${wait}s`);
+                console.warn(`[MilitaryFlightLayer] 🚫 Rate limited — backing off ${wait}s`);
             } else {
-                console.warn("[FlightLayer] ⚠️ Poll failed:", err);
+                console.warn("[MilitaryFlightLayer] ⚠️ Poll failed:", err);
             }
             return;
         }
 
-        console.log(`[FlightLayer] ✈️ Got ${aircraft.length} aircraft`);
+        console.log(`[MilitaryFlightLayer] 🎖️ Got ${aircraft.length} military aircraft`);
         const currentIds = new Set<string>();
         const now = Date.now();
+        const color = "#ef4444";
 
         for (const ac of aircraft) {
-            const id = `flight-${ac.icao24}`;
+            const id = `mil-flight-${ac.icao24}`;
             currentIds.add(id);
             this.stateMap.set(id, { ac, lastUpdate: now });
 
             const position = Cesium.Cartesian3.fromDegrees(ac.longitude, ac.latitude, ac.altitude);
-            const color = this.getAltitudeColor(ac.altitude);
             const rotation = -Cesium.Math.toRadians(ac.heading);
 
             const existing = viewer.entities.getById(id);
             if (existing) {
                 (existing.position as any).setValue(position);
-                // Use consistent raw number (not ConstantProperty) — fixes type inconsistency
                 if (existing.billboard) (existing.billboard.rotation as any) = rotation;
                 existing.properties!.record = ac;
             } else {
@@ -204,10 +160,10 @@ export class FlightLayer implements LayerPlugin {
                         fillColor: Cesium.Color.fromCssColorString(color),
                         style: Cesium.LabelStyle.FILL,
                         showBackground: true,
-                        backgroundColor: Cesium.Color.fromCssColorString("#0a101c").withAlpha(0.8),
+                        backgroundColor: Cesium.Color.fromCssColorString("#3f0000").withAlpha(0.8),
                         verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
                         pixelOffset: new Cesium.Cartesian2(0, -16),
-                        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 1500000),
+                        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 3000000),
                     },
                     properties: { isFlight: true, record: ac }
                 });
@@ -215,7 +171,6 @@ export class FlightLayer implements LayerPlugin {
             }
         }
 
-        // Collect stale IDs before removing to avoid Set mutation during iteration
         const staleIds = [...this.entityIds].filter(id => !currentIds.has(id));
         for (const id of staleIds) {
             const entity = viewer.entities.getById(id);
