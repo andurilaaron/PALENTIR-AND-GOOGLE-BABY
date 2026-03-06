@@ -31,7 +31,11 @@ class _LayerRegistry {
                 const time = clock.currentTime;
                 for (const plugin of this.plugins.values()) {
                     if (plugin.enabled && plugin.onTick) {
-                        plugin.onTick(viewer, time);
+                        try {
+                            plugin.onTick(viewer, time);
+                        } catch (err) {
+                            console.error(`[LayerRegistry] onTick error in "${plugin.id}":`, err);
+                        }
                     }
                 }
             }
@@ -68,6 +72,9 @@ class _LayerRegistry {
         if (plugin.enabled && this.viewer) {
             plugin.onRemove(this.viewer);
             plugin.enabled = false;
+            plugin.status = "idle";
+            plugin.entityCount = undefined;
+            plugin.lastRefresh = undefined;
         }
 
         this.plugins.delete(id);
@@ -110,13 +117,19 @@ class _LayerRegistry {
         plugin.onRemove(this.viewer);
         plugin.enabled = false;
         plugin.status = "idle";
+        plugin.entityCount = undefined;
+        plugin.lastRefresh = undefined;
         this.notify();
     }
 
-    toggleLayer(id: string): Promise<void> | void {
+    async toggleLayer(id: string): Promise<void> {
         const plugin = this.plugins.get(id);
         if (!plugin) return;
-        return plugin.enabled ? this.disableLayer(id) : this.enableLayer(id);
+        if (plugin.enabled) {
+            this.disableLayer(id);
+        } else {
+            await this.enableLayer(id);
+        }
     }
 
     /* ── Subscriptions (for UI reactivity) ──────────────── */
