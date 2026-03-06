@@ -1,3 +1,13 @@
+/**
+ * SatelliteLayer — live TLE tracking + CZML playback for historical scrubbing.
+ *
+ * Live mode:  Fetches TLEs from CelesTrak, propagates per-tick via satellite.js.
+ * CZML mode:  On onSeek(), pre-computes a ±2h window, loads as CzmlDataSource
+ *             with Lagrange interpolation and orbit trail paths. Cesium handles
+ *             all timeline scrubbing natively.
+ *
+ * Switches back to live mode when ClockController.goLive() is called.
+ */
 import type { Viewer, JulianDate } from "cesium";
 import type {
     LayerPlugin,
@@ -5,15 +15,18 @@ import type {
     LayerStatus,
     TimeAwareness,
 } from "../../core/LayerPlugin.ts";
+import { AppState } from "../../core/AppState.ts";
 import { parseTLE } from "./tleParser.ts";
 import { getSatellitePosition, generateOrbitPolyline } from "./propagator.ts";
+import { generateSatelliteCZML } from "./czmlGenerator.ts";
 import type { SatelliteRecord } from "./types.ts";
 
 const TLE_URL =
     "https://celestrak.org/NORAD/elements/gp.php?GROUP=active&FORMAT=tle";
 
-const MAX_SATELLITES = 500; // Adjusted for a better visual mesh
-const TICK_INTERVAL = 10; // Update ~6 times a second at 60fps
+const MAX_SATELLITES = 500;
+const TICK_INTERVAL = 10;
+const CZML_WINDOW_HOURS = 2; // ±2h around seek target
 
 export class SatelliteLayer implements LayerPlugin {
     readonly id = "satellites";
@@ -32,6 +45,10 @@ export class SatelliteLayer implements LayerPlugin {
     private entityIds: string[] = [];
     private tickCount = 0;
 
+    // CZML playback state
+    private czmlMode = false;
+    private czmlSource: any = null; // CzmlDataSource
+
     async onAdd(viewer: Viewer): Promise<void> {
         const Cesium = await import("cesium");
 
@@ -48,12 +65,11 @@ export class SatelliteLayer implements LayerPlugin {
 
             for (const record of this.records) {
                 const pos = getSatellitePosition(record.satrec, now);
-                if (!pos) continue; // Skip if initial propagation fails
+                if (!pos) continue;
 
                 const id = `sat-${record.id}`;
 
-                // Determine color based on orbit
-                let colorHex = "#7ed4ff"; // Default LEO
+                let colorHex = "#7ed4ff";
                 if (record.orbitCategory === "MEO") colorHex = "#ffaa00";
                 if (record.orbitCategory === "GEO") colorHex = "#ff5555";
 
@@ -80,7 +96,7 @@ export class SatelliteLayer implements LayerPlugin {
                         showBackground: true,
                         backgroundColor: Cesium.Color.fromCssColorString("#0a101c").withAlpha(0.8),
                         disableDepthTestDistance: Number.POSITIVE_INFINITY,
-                        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000000), // Hide when zoomed out
+                        distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0, 15000000),
                     },
                     polyline: {
                         show: new Cesium.CallbackProperty(() => viewer.selectedEntity?.id === id, false),
@@ -102,15 +118,17 @@ export class SatelliteLayer implements LayerPlugin {
             this.lastRefresh = Date.now();
             this.status = "ready";
 
-            console.log(`[SatelliteLayer] ✅ Loaded ${this.entityIds.length} satellites`);
+            console.log(`[SatelliteLayer] Loaded ${this.entityIds.length} satellites`);
         } catch (err) {
-            console.error("[SatelliteLayer] ❌ Failed to load TLE data:", err);
+            console.error("[SatelliteLayer] Failed to load TLE data:", err);
             this.status = "error";
             throw err;
         }
     }
 
     onRemove(viewer: Viewer): void {
+        this.exitCzmlMode(viewer);
+
         for (const id of this.entityIds) {
             const entity = viewer.entities.getById(id);
             if (entity) viewer.entities.remove(entity);
@@ -119,17 +137,73 @@ export class SatelliteLayer implements LayerPlugin {
         this.records = [];
         this.tickCount = 0;
         this.status = "idle";
-        console.log("[SatelliteLayer] 🔄 Removed");
+        console.log("[SatelliteLayer] Removed");
+    }
+
+    async onSeek(viewer: Viewer, isoString: string): Promise<void> {
+        if (this.records.length === 0) return;
+
+        const Cesium = await import("cesium");
+        const target = new Date(isoString);
+        const windowMs = CZML_WINDOW_HOURS * 60 * 60 * 1000;
+        const start = new Date(target.getTime() - windowMs);
+        const end = new Date(target.getTime() + windowMs);
+
+        // Remove existing CZML source
+        if (this.czmlSource) {
+            viewer.dataSources.remove(this.czmlSource, true);
+            this.czmlSource = null;
+        }
+
+        // Hide tick-based entities
+        for (const id of this.entityIds) {
+            const entity = viewer.entities.getById(id);
+            if (entity) entity.show = false;
+        }
+
+        this.status = "loading";
+
+        try {
+            const czml = generateSatelliteCZML(this.records, start, end);
+            this.czmlSource = await Cesium.CzmlDataSource.load(czml);
+            viewer.dataSources.add(this.czmlSource);
+
+            this.czmlMode = true;
+            this.entityCount = this.czmlSource.entities.values.length;
+            this.lastRefresh = Date.now();
+            this.status = "ready";
+
+            console.log(
+                `[SatelliteLayer] CZML playback: ${this.entityCount} sats, ` +
+                `${start.toISOString()} → ${end.toISOString()}`
+            );
+        } catch (err) {
+            console.error("[SatelliteLayer] CZML generation failed:", err);
+            this.status = "error";
+            // Restore tick entities on failure
+            for (const id of this.entityIds) {
+                const entity = viewer.entities.getById(id);
+                if (entity) entity.show = true;
+            }
+        }
     }
 
     onTick(viewer: Viewer, time: JulianDate): void {
         if (!this.enabled || this.records.length === 0) return;
 
+        // Auto-exit CZML mode when returning to live
+        if (this.czmlMode) {
+            const mode = AppState.getState().playback.mode;
+            if (mode === "live") {
+                this.exitCzmlMode(viewer);
+            }
+            return; // CZML handles positions — skip tick propagation
+        }
+
         this.tickCount++;
         if (this.tickCount % TICK_INTERVAL !== 0) return;
 
-        // Using dynamically available Cesium reference to avoid imports deep in the tick loop
-        // @ts-ignore
+        // @ts-ignore — Cesium global from dynamic import
         const Cesium = window.Cesium;
         if (!Cesium) return;
 
@@ -147,5 +221,25 @@ export class SatelliteLayer implements LayerPlugin {
                 }
             }
         }
+    }
+
+    /** Exit CZML playback — remove data source, restore tick entities */
+    private exitCzmlMode(viewer: Viewer): void {
+        if (!this.czmlMode) return;
+
+        if (this.czmlSource) {
+            viewer.dataSources.remove(this.czmlSource, true);
+            this.czmlSource = null;
+        }
+
+        // Restore tick-based entities
+        for (const id of this.entityIds) {
+            const entity = viewer.entities.getById(id);
+            if (entity) entity.show = true;
+        }
+
+        this.czmlMode = false;
+        this.entityCount = this.entityIds.length;
+        console.log("[SatelliteLayer] Exited CZML mode — back to live tick");
     }
 }

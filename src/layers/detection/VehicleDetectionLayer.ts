@@ -67,7 +67,7 @@ export class VehicleDetectionLayer implements LayerPlugin {
     private lastHash = "";
     private nextSeq = 0;
 
-    async onAdd(viewer: Viewer): Promise<void> {
+    async onAdd(_viewer: Viewer): Promise<void> {
         this.CesiumRef = await import("cesium");
         this.status = "ready";
         this.nextSeq = 0;

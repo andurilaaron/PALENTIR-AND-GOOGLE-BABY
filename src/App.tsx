@@ -13,6 +13,7 @@ import { WeatherRadarLayer } from "./layers/weather/WeatherRadarLayer.ts";
 import { SatelliteImageryLayer } from "./layers/imagery/index.ts";
 import { CrimeLayer } from "./layers/crime/CrimeLayer.ts";
 import { VehicleDetectionLayer } from "./layers/detection/index.ts";
+import { CountryBordersLayer } from "./layers/borders/index.ts";
 import { createPostFxEngine } from "./postfx/index.ts";
 import type { PostFxEngine } from "./postfx/index.ts";
 import { ClockController } from "./features/playback/index.ts";
@@ -20,6 +21,7 @@ import { LayerPanel } from "./ui/LayerPanel.tsx";
 import { PostFxPanel } from "./ui/PostFxPanel.tsx";
 import { PlaybackBar } from "./features/playback/index.ts";
 import { ShotPlannerPanel } from "./features/shot-planner/ShotPlannerPanel.tsx";
+import { ScenarioPanel } from "./features/scenarios/index.ts";
 import { EntityInspector } from "./ui/EntityInspector.tsx";
 import type { InspectedEntity } from "./ui/EntityInspector.tsx";
 import { CCTVFeedPanel } from "./ui/CCTVFeedPanel.tsx";
@@ -89,6 +91,7 @@ export default function App() {
             LayerRegistry.register(new TrafficParticleLayer());
             LayerRegistry.register(new CCTVLayer());
             LayerRegistry.register(new VehicleDetectionLayer());
+            LayerRegistry.register(new CountryBordersLayer());
 
             // Initialize clock controller after layers are registered
             await ClockController.attach(v);
@@ -185,6 +188,7 @@ export default function App() {
                     onClose={() => setInspectedEntity(null)}
                 />
                 <ShotPlannerPanel />
+                <ScenarioPanel />
                 <PlaybackBar />
 
                 {/* Unified entity inspector — handles ALL entity types */}

@@ -37,6 +37,7 @@ const PILL_COLORS: Record<string, string> = {
     "traffic-particles": "#6ee7b7",
     cctv: "#fbbf24",
     "vehicle-detection": "#d4a017",
+    "country-borders": "#4a90d9",
 };
 
 const EVENT_CATEGORIES = [
