@@ -1,0 +1,247 @@
+/* ── Satellite Intel Panel ──────────────────────────── */
+.si-anchor {
+    position: absolute;
+    top: 60px;
+    left: 16px;
+    z-index: 1001;
+    pointer-events: auto;
+}
+
+.si {
+    background: rgba(10, 16, 28, 0.92);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid rgba(100, 140, 200, 0.2);
+    border-radius: 12px;
+    padding: 12px;
+    width: 380px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    color: #dce8f8;
+}
+
+.si__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.si__title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: #22d3ee;
+}
+
+.si__close {
+    background: none;
+    border: none;
+    color: rgba(220, 232, 248, 0.5);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 2px 6px;
+}
+.si__close:hover {
+    color: #dce8f8;
+}
+
+.si__scenario {
+    font-size: 10px;
+    color: rgba(220, 232, 248, 0.5);
+    margin-bottom: 10px;
+    letter-spacing: 0.04em;
+}
+
+.si__compute {
+    width: 100%;
+    padding: 10px;
+    background: rgba(34, 211, 238, 0.1);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    border-radius: 6px;
+    color: #22d3ee;
+    font: 600 11px/1 ui-monospace, monospace;
+    cursor: pointer;
+    letter-spacing: 0.06em;
+    transition: all 0.2s;
+}
+.si__compute:hover {
+    background: rgba(34, 211, 238, 0.2);
+    border-color: #22d3ee;
+}
+.si__compute:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.si__loading {
+    text-align: center;
+    font-size: 10px;
+    color: rgba(220, 232, 248, 0.5);
+    padding: 12px 0;
+    animation: si-pulse 1.5s infinite;
+}
+@keyframes si-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* Summary */
+.si__summary {
+    display: flex;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.12);
+    margin-bottom: 6px;
+}
+
+.si__stat {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: rgba(220, 232, 248, 0.6);
+}
+.si__stat--recon {
+    color: #f59e0b;
+}
+.si__stat--tasked {
+    color: #ef4444;
+}
+
+/* Countries */
+.si__countries {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 6px 0 10px;
+    border-bottom: 1px solid rgba(100, 140, 200, 0.12);
+    margin-bottom: 8px;
+}
+
+.si__country {
+    font-size: 10px;
+    color: rgba(220, 232, 248, 0.5);
+}
+
+/* Filters */
+.si__filters {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+}
+
+.si__filter {
+    flex: 1;
+    padding: 5px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(100, 140, 200, 0.12);
+    border-radius: 4px;
+    color: rgba(220, 232, 248, 0.5);
+    font: 600 9px/1 ui-monospace, monospace;
+    cursor: pointer;
+    text-align: center;
+    letter-spacing: 0.04em;
+    transition: all 0.15s;
+}
+.si__filter:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+.si__filter--active {
+    border-color: #22d3ee;
+    color: #22d3ee;
+    background: rgba(34, 211, 238, 0.08);
+}
+
+/* Satellite list */
+.si__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.si__sat {
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(100, 140, 200, 0.08);
+    border-radius: 6px;
+    transition: border-color 0.2s;
+}
+.si__sat:hover {
+    border-color: rgba(100, 140, 200, 0.25);
+}
+.si__sat--recon {
+    border-left: 2px solid #f59e0b;
+}
+.si__sat--tasked {
+    border-left: 2px solid #ef4444;
+    background: rgba(239, 68, 68, 0.04);
+}
+
+.si__sat-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+}
+
+.si__sat-flag {
+    font-size: 13px;
+}
+
+.si__sat-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #dce8f8;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.si__badge {
+    font-size: 8px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    flex-shrink: 0;
+}
+.si__badge--recon {
+    background: rgba(245, 158, 11, 0.2);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+.si__badge--tasked {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.si__sat-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: rgba(220, 232, 248, 0.4);
+    margin-bottom: 3px;
+}
+
+.si__sat-detail {
+    font-size: 9px;
+    color: rgba(220, 232, 248, 0.5);
+    margin-bottom: 4px;
+}
+
+/* Pass windows */
+.si__pass {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: rgba(220, 232, 248, 0.35);
+    padding: 2px 0;
+    border-top: 1px solid rgba(100, 140, 200, 0.06);
+}
+
+.si__pass-time {
+    color: rgba(34, 211, 238, 0.6);
+    font-weight: 600;
+}

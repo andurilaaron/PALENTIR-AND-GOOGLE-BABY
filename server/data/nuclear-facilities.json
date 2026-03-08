@@ -1,0 +1,470 @@
+[
+  {
+    "name": "Palo Verde NPP",
+    "country": "USA",
+    "type": "PWR",
+    "capacity": "3937 MWe",
+    "status": "Operational",
+    "lat": 33.388,
+    "lon": -112.862
+  },
+  {
+    "name": "Peach Bottom",
+    "country": "USA",
+    "type": "BWR",
+    "capacity": "2639 MWe",
+    "status": "Operational",
+    "lat": 39.756,
+    "lon": -76.269
+  },
+  {
+    "name": "Browns Ferry NPP",
+    "country": "USA",
+    "type": "BWR",
+    "capacity": "3474 MWe",
+    "status": "Operational",
+    "lat": 34.703,
+    "lon": -87.119
+  },
+  {
+    "name": "Diablo Canyon NPP",
+    "country": "USA",
+    "type": "PWR",
+    "capacity": "2256 MWe",
+    "status": "Operational",
+    "lat": 35.211,
+    "lon": -120.854
+  },
+  {
+    "name": "Grand Gulf NPP",
+    "country": "USA",
+    "type": "BWR",
+    "capacity": "1497 MWe",
+    "status": "Operational",
+    "lat": 32.073,
+    "lon": -91.049
+  },
+  {
+    "name": "Turkey Point NPP",
+    "country": "USA",
+    "type": "PWR",
+    "capacity": "1632 MWe",
+    "status": "Operational",
+    "lat": 25.434,
+    "lon": -80.332
+  },
+  {
+    "name": "Surry NPP",
+    "country": "USA",
+    "type": "PWR",
+    "capacity": "1676 MWe",
+    "status": "Operational",
+    "lat": 37.165,
+    "lon": -76.698
+  },
+  {
+    "name": "Vogtle NPP",
+    "country": "USA",
+    "type": "PWR",
+    "capacity": "4568 MWe",
+    "status": "Operational",
+    "lat": 33.141,
+    "lon": -81.762
+  },
+  {
+    "name": "Sequoyah NPP",
+    "country": "USA",
+    "type": "PWR",
+    "capacity": "2441 MWe",
+    "status": "Operational",
+    "lat": 35.226,
+    "lon": -85.092
+  },
+  {
+    "name": "Clinton Power Station",
+    "country": "USA",
+    "type": "BWR",
+    "capacity": "1078 MWe",
+    "status": "Operational",
+    "lat": 40.163,
+    "lon": -88.835
+  },
+  {
+    "name": "Flamanville NPP",
+    "country": "France",
+    "type": "PWR",
+    "capacity": "2652 MWe",
+    "status": "Operational",
+    "lat": 49.536,
+    "lon": -1.885
+  },
+  {
+    "name": "Gravelines NPP",
+    "country": "France",
+    "type": "PWR",
+    "capacity": "5460 MWe",
+    "status": "Operational",
+    "lat": 51.012,
+    "lon": 2.133
+  },
+  {
+    "name": "Paluel NPP",
+    "country": "France",
+    "type": "PWR",
+    "capacity": "5320 MWe",
+    "status": "Operational",
+    "lat": 49.865,
+    "lon": 0.630
+  },
+  {
+    "name": "Cattenom NPP",
+    "country": "France",
+    "type": "PWR",
+    "capacity": "5448 MWe",
+    "status": "Operational",
+    "lat": 49.403,
+    "lon": 6.218
+  },
+  {
+    "name": "Tricastin NPP",
+    "country": "France",
+    "type": "PWR",
+    "capacity": "3600 MWe",
+    "status": "Operational",
+    "lat": 44.330,
+    "lon": 4.731
+  },
+  {
+    "name": "Sizewell B",
+    "country": "UK",
+    "type": "PWR",
+    "capacity": "1198 MWe",
+    "status": "Operational",
+    "lat": 52.214,
+    "lon": 1.620
+  },
+  {
+    "name": "Hartlepool NPP",
+    "country": "UK",
+    "type": "AGR",
+    "capacity": "1190 MWe",
+    "status": "Operational",
+    "lat": 54.635,
+    "lon": -1.185
+  },
+  {
+    "name": "Heysham NPP",
+    "country": "UK",
+    "type": "AGR",
+    "capacity": "2370 MWe",
+    "status": "Operational",
+    "lat": 54.030,
+    "lon": -2.921
+  },
+  {
+    "name": "Leningrad NPP",
+    "country": "Russia",
+    "type": "RBMK",
+    "capacity": "4000 MWe",
+    "status": "Operational",
+    "lat": 59.831,
+    "lon": 29.076
+  },
+  {
+    "name": "Smolensk NPP",
+    "country": "Russia",
+    "type": "RBMK",
+    "capacity": "3000 MWe",
+    "status": "Operational",
+    "lat": 54.153,
+    "lon": 33.237
+  },
+  {
+    "name": "Balakovo NPP",
+    "country": "Russia",
+    "type": "PWR",
+    "capacity": "4000 MWe",
+    "status": "Operational",
+    "lat": 52.080,
+    "lon": 47.959
+  },
+  {
+    "name": "Kalinin NPP",
+    "country": "Russia",
+    "type": "PWR",
+    "capacity": "4000 MWe",
+    "status": "Operational",
+    "lat": 57.868,
+    "lon": 35.056
+  },
+  {
+    "name": "Novovoronezh NPP",
+    "country": "Russia",
+    "type": "PWR",
+    "capacity": "2556 MWe",
+    "status": "Operational",
+    "lat": 51.290,
+    "lon": 39.213
+  },
+  {
+    "name": "Qinshan NPP",
+    "country": "China",
+    "type": "PWR",
+    "capacity": "2660 MWe",
+    "status": "Operational",
+    "lat": 30.434,
+    "lon": 120.949
+  },
+  {
+    "name": "Daya Bay NPP",
+    "country": "China",
+    "type": "PWR",
+    "capacity": "1968 MWe",
+    "status": "Operational",
+    "lat": 22.599,
+    "lon": 114.544
+  },
+  {
+    "name": "Yangjiang NPP",
+    "country": "China",
+    "type": "PWR",
+    "capacity": "6600 MWe",
+    "status": "Operational",
+    "lat": 21.703,
+    "lon": 111.618
+  },
+  {
+    "name": "Fuqing NPP",
+    "country": "China",
+    "type": "PWR",
+    "capacity": "3380 MWe",
+    "status": "Operational",
+    "lat": 25.431,
+    "lon": 119.430
+  },
+  {
+    "name": "Haiyang NPP",
+    "country": "China",
+    "type": "AP1000",
+    "capacity": "2500 MWe",
+    "status": "Operational",
+    "lat": 36.759,
+    "lon": 121.460
+  },
+  {
+    "name": "Kudankulam NPP",
+    "country": "India",
+    "type": "VVER",
+    "capacity": "2000 MWe",
+    "status": "Operational",
+    "lat": 8.173,
+    "lon": 77.713
+  },
+  {
+    "name": "Tarapur NPP",
+    "country": "India",
+    "type": "BWR",
+    "capacity": "1400 MWe",
+    "status": "Operational",
+    "lat": 19.831,
+    "lon": 72.655
+  },
+  {
+    "name": "Kakrapar NPP",
+    "country": "India",
+    "type": "PHWR",
+    "capacity": "880 MWe",
+    "status": "Operational",
+    "lat": 21.233,
+    "lon": 73.356
+  },
+  {
+    "name": "Kori NPP",
+    "country": "South Korea",
+    "type": "PWR",
+    "capacity": "5137 MWe",
+    "status": "Operational",
+    "lat": 35.318,
+    "lon": 129.293
+  },
+  {
+    "name": "Hanul NPP",
+    "country": "South Korea",
+    "type": "PWR",
+    "capacity": "5900 MWe",
+    "status": "Operational",
+    "lat": 37.095,
+    "lon": 129.384
+  },
+  {
+    "name": "Hanbit NPP",
+    "country": "South Korea",
+    "type": "PWR",
+    "capacity": "5900 MWe",
+    "status": "Operational",
+    "lat": 35.414,
+    "lon": 126.421
+  },
+  {
+    "name": "Fukushima Daiichi",
+    "country": "Japan",
+    "type": "BWR",
+    "capacity": "0 MWe",
+    "status": "Decommissioning",
+    "lat": 37.421,
+    "lon": 141.033
+  },
+  {
+    "name": "Kashiwazaki-Kariwa NPP",
+    "country": "Japan",
+    "type": "BWR",
+    "capacity": "8212 MWe",
+    "status": "Shutdown",
+    "lat": 37.427,
+    "lon": 138.601
+  },
+  {
+    "name": "Sendai NPP",
+    "country": "Japan",
+    "type": "PWR",
+    "capacity": "1780 MWe",
+    "status": "Operational",
+    "lat": 31.836,
+    "lon": 130.187
+  },
+  {
+    "name": "Chashma NPP",
+    "country": "Pakistan",
+    "type": "PWR",
+    "capacity": "1330 MWe",
+    "status": "Operational",
+    "lat": 32.390,
+    "lon": 71.452
+  },
+  {
+    "name": "Karachi NPP",
+    "country": "Pakistan",
+    "type": "VVER",
+    "capacity": "2028 MWe",
+    "status": "Operational",
+    "lat": 25.038,
+    "lon": 66.784
+  },
+  {
+    "name": "Bushehr NPP",
+    "country": "Iran",
+    "type": "VVER",
+    "capacity": "1000 MWe",
+    "status": "Operational",
+    "lat": 28.831,
+    "lon": 50.887
+  },
+  {
+    "name": "Fordow Fuel Enrichment",
+    "country": "Iran",
+    "type": "Enrichment",
+    "capacity": "N/A",
+    "status": "Operational",
+    "lat": 34.885,
+    "lon": 50.994
+  },
+  {
+    "name": "Dimona Research Reactor",
+    "country": "Israel",
+    "type": "Research",
+    "capacity": "N/A",
+    "status": "Operational",
+    "lat": 30.977,
+    "lon": 35.147
+  },
+  {
+    "name": "Yongbyon Nuclear Complex",
+    "country": "North Korea",
+    "type": "Research/Production",
+    "capacity": "N/A",
+    "status": "Operational",
+    "lat": 39.789,
+    "lon": 125.754
+  },
+  {
+    "name": "Zaporizhzhia NPP",
+    "country": "Ukraine",
+    "type": "PWR",
+    "capacity": "6000 MWe",
+    "status": "Shutdown",
+    "lat": 47.507,
+    "lon": 34.585
+  },
+  {
+    "name": "South Ukraine NPP",
+    "country": "Ukraine",
+    "type": "PWR",
+    "capacity": "3000 MWe",
+    "status": "Operational",
+    "lat": 47.837,
+    "lon": 31.218
+  },
+  {
+    "name": "Rivne NPP",
+    "country": "Ukraine",
+    "type": "PWR",
+    "capacity": "2835 MWe",
+    "status": "Operational",
+    "lat": 51.327,
+    "lon": 25.889
+  },
+  {
+    "name": "Khmelnytskyi NPP",
+    "country": "Ukraine",
+    "type": "PWR",
+    "capacity": "2000 MWe",
+    "status": "Operational",
+    "lat": 50.304,
+    "lon": 26.648
+  },
+  {
+    "name": "Cernavoda NPP",
+    "country": "Romania",
+    "type": "PHWR",
+    "capacity": "1413 MWe",
+    "status": "Operational",
+    "lat": 44.323,
+    "lon": 28.062
+  },
+  {
+    "name": "Paks NPP",
+    "country": "Hungary",
+    "type": "VVER",
+    "capacity": "1902 MWe",
+    "status": "Operational",
+    "lat": 46.575,
+    "lon": 18.856
+  },
+  {
+    "name": "Forsmark NPP",
+    "country": "Sweden",
+    "type": "BWR",
+    "capacity": "3274 MWe",
+    "status": "Operational",
+    "lat": 60.406,
+    "lon": 18.171
+  },
+  {
+    "name": "Loviisa NPP",
+    "country": "Finland",
+    "type": "VVER",
+    "capacity": "1000 MWe",
+    "status": "Operational",
+    "lat": 60.407,
+    "lon": 26.358
+  },
+  {
+    "name": "Embalse NPP",
+    "country": "Argentina",
+    "type": "PHWR",
+    "capacity": "648 MWe",
+    "status": "Operational",
+    "lat": -32.234,
+    "lon": -64.433
+  }
+]

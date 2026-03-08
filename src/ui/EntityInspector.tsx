@@ -6,11 +6,22 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useViewer } from "../core/ViewerContext.tsx";
 import "./styles/entity-inspector.css";
+import { NoradScope } from "./NoradScope.tsx";
+
+// --- Deterministic hash helpers for redacted field values ---
+function hashCode(s: string): number {
+    let h = 0;
+    for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+    return Math.abs(h);
+}
+function pickByHash(arr: string[], entityId: string, salt: number): string {
+    return arr[(hashCode(entityId) + salt) % arr.length];
+}
 
 export interface InspectedEntity {
     id: string;
     name: string;
-    type: "flight" | "military-flight" | "satellite" | "earthquake" | "crime" | "cctv" | "detection" | "unknown";
+    type: "flight" | "military-flight" | "satellite" | "earthquake" | "crime" | "cctv" | "detection" | "cable" | "nuclear" | "military-base" | "unknown";
     properties: Record<string, any>;
 }
 
@@ -27,6 +38,9 @@ const TYPE_META: Record<string, { icon: string; color: string; label: string }> 
     "crime": { icon: "🚨", color: "#f97316", label: "CRIME REPORT" },
     "cctv": { icon: "📹", color: "#22c55e", label: "CCTV CAMERA" },
     "detection": { icon: "🚗", color: "#d4a017", label: "VEHICLE DETECT" },
+    "cable": { icon: "🔌", color: "#22d3ee", label: "SUBMARINE CABLE" },
+    "nuclear": { icon: "☢️", color: "#f59e0b", label: "NUCLEAR FACILITY" },
+    "military-base": { icon: "🏛️", color: "#ef4444", label: "MIL INSTALLATION" },
     "unknown": { icon: "📍", color: "#9ca3af", label: "ENTITY" },
 };
 
@@ -34,14 +48,32 @@ const TRAIL_MAX_POINTS = 300; // ~10 minutes at 2s sample rate
 const TRAIL_SAMPLE_MS = 2000;
 const TRAIL_ENTITY_PREFIX = "ei-trail-";
 
+// --- Telemetry helpers ---
+function headingToCompass(deg: number): string {
+    const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    return dirs[Math.round(((deg % 360) + 360) % 360 / 45) % 8];
+}
+
+interface TrackingTelemetry {
+    speed: string;
+    altitude: string;
+    heading: string;
+    vrate: string;
+}
+
 export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
     const viewer = useViewer();
     const [expanded, setExpanded] = useState(false);
     const [isTracking, setIsTracking] = useState(false);
+    const [trackingTelemetry, setTrackingTelemetry] = useState<TrackingTelemetry | null>(null);
+    // Satellite ground track — updated every second alongside telemetry
+    const [scopeLat, setScopeLat] = useState("—");
+    const [scopeLon, setScopeLon] = useState("—");
 
     // Trail state — lives as refs so it doesn't cause re-renders on each sample
     const trailPositions = useRef<any[]>([]);    // Cesium.Cartesian3 ring buffer
     const trailTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+    const telemTimer = useRef<ReturnType<typeof setInterval> | null>(null);
     const trailEntityId = useRef<string | null>(null);
 
     /** Tear down any active trail polyline + timer */
@@ -50,12 +82,19 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
             clearInterval(trailTimer.current);
             trailTimer.current = null;
         }
+        if (telemTimer.current) {
+            clearInterval(telemTimer.current);
+            telemTimer.current = null;
+        }
         if (trailEntityId.current && viewer) {
             const te = viewer.entities.getById(trailEntityId.current);
             if (te) viewer.entities.remove(te);
             trailEntityId.current = null;
         }
         trailPositions.current = [];
+        setTrackingTelemetry(null);
+        setScopeLat("—");
+        setScopeLon("—");
     }, [viewer]);
 
     // Reset when entity changes or panel unmounts
@@ -174,12 +213,95 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
                 if (!pos) return;
                 trailPositions.current = [...trailPositions.current, pos].slice(-TRAIL_MAX_POINTS);
             }, TRAIL_SAMPLE_MS);
+
+            // --- Live telemetry ticker (1s) ---
+            const isFlight = entity.type === "flight" || entity.type === "military-flight";
+            const isSatellite = entity.type === "satellite";
+
+            const readTelemetry = () => {
+                if (isFlight) {
+                    // Read latest values from the entity's properties bag
+                    const rec = cesiumEntity.properties?.getValue
+                        ? cesiumEntity.properties.getValue(viewer.clock.currentTime)
+                        : null;
+                    const src = rec ?? entity.properties;
+                    const speedKts = src?.velocity != null
+                        ? `${(src.velocity * 1.944).toFixed(0)} kts`
+                        : "—";
+                    const altFt = src?.altitude != null
+                        ? `${Math.round(src.altitude * 3.28084).toLocaleString()} ft`
+                        : "—";
+                    const hdgDeg = src?.heading != null ? Math.round(src.heading) : null;
+                    const hdg = hdgDeg != null
+                        ? `${hdgDeg}° ${headingToCompass(hdgDeg)}`
+                        : "—";
+                    const vr = src?.verticalRate;
+                    const vrate = vr != null
+                        ? `${vr > 0 ? "↑ +" : vr < 0 ? "↓ " : ""}${vr.toFixed(1)} m/s`
+                        : "—";
+                    setTrackingTelemetry({ speed: speedKts, altitude: altFt, heading: hdg, vrate });
+                } else if (isSatellite) {
+                    const pos = samplePosition();
+                    let altKm = "—";
+                    if (pos) {
+                        try {
+                            const carto = Cesium.Cartographic.fromCartesian(pos);
+                            altKm = `${(carto.height / 1000).toFixed(0)} km`;
+                            // Update ground-track lat/lon for NoradScope
+                            const latDeg = Cesium.Math.toDegrees(carto.latitude);
+                            const lonDeg = Cesium.Math.toDegrees(carto.longitude);
+                            setScopeLat(`${latDeg.toFixed(4)}°`);
+                            setScopeLon(`${lonDeg.toFixed(4)}°`);
+                        } catch {
+                            altKm = "—";
+                        }
+                    }
+                    const rec = cesiumEntity.properties?.getValue
+                        ? cesiumEntity.properties.getValue(viewer.clock.currentTime)
+                        : null;
+                    const src = rec ?? entity.properties;
+                    // Orbital velocity: v ≈ sqrt(GM / r), GM=3.986e14, r = R_earth + h
+                    let spdKms = "—";
+                    if (pos) {
+                        try {
+                            const carto = Cesium.Cartographic.fromCartesian(pos);
+                            const r = 6371000 + carto.height;
+                            const v = Math.sqrt(3.986e14 / r) / 1000;
+                            spdKms = `${v.toFixed(2)} km/s`;
+                        } catch {
+                            spdKms = "—";
+                        }
+                    }
+                    const orbitCat = src?.orbitCategory ?? entity.properties?.orbitCategory;
+                    // Classify orbit type
+                    let orbitType = orbitCat ?? "—";
+                    if (!orbitCat && pos) {
+                        try {
+                            const carto = Cesium.Cartographic.fromCartesian(pos);
+                            const h = carto.height / 1000;
+                            orbitType = h < 2000 ? "LEO" : h < 35000 ? "MEO" : "GEO";
+                        } catch {
+                            orbitType = "—";
+                        }
+                    }
+                    setTrackingTelemetry({
+                        speed: spdKms,
+                        altitude: altKm,
+                        heading: orbitType,
+                        vrate: "—",
+                    });
+                }
+            };
+
+            // Run immediately then every second
+            readTelemetry();
+            telemTimer.current = setInterval(readTelemetry, 1000);
         }
     };
 
     /** Render entity-specific detail rows */
     const renderDetails = () => {
-        const rows: { label: string; value: string }[] = [];
+        const rows: { label: string; value: string; redacted?: "block" | "bracket" | "class" }[] = [];
 
         if (entity.type === "flight" || entity.type === "military-flight") {
             if (p.callsign) rows.push({ label: "CALLSIGN", value: p.callsign });
@@ -221,11 +343,56 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
             }
         }
 
+        if (entity.type === "cable") {
+            if (p.name) rows.push({ label: "NAME", value: p.name });
+            if (p.capacity) rows.push({ label: "CAPACITY", value: p.capacity });
+            if (p.length) rows.push({ label: "LENGTH", value: p.length });
+            if (p.rfs) rows.push({ label: "READY FOR SERVICE", value: p.rfs });
+        }
+
+        if (entity.type === "nuclear") {
+            if (p.name) rows.push({ label: "FACILITY", value: p.name });
+            if (p.country) rows.push({ label: "COUNTRY", value: p.country });
+            if (p.type) rows.push({ label: "TYPE", value: p.type });
+            if (p.capacity) rows.push({ label: "CAPACITY", value: p.capacity });
+            if (p.status) rows.push({ label: "STATUS", value: p.status });
+        }
+
+        if (entity.type === "military-base") {
+            if (p.name) rows.push({ label: "INSTALLATION", value: p.name });
+            if (p.country) rows.push({ label: "COUNTRY", value: p.country });
+            if (p.type) rows.push({ label: "TYPE", value: p.type });
+            if (p.branch) rows.push({ label: "BRANCH", value: p.branch });
+        }
+
+        // Redacted intel fields (decorative) — deterministic per entity ID
+        const eid = entity.id;
+        rows.push({ label: "OPERATOR",        value: "████████████",          redacted: "block"  });
+        rows.push({ label: "MISSION ID",      value: "██████-████",           redacted: "block"  });
+        rows.push({ label: "TASKING REF",     value: "[REDACTED — LEVEL 4]",  redacted: "bracket" });
+        rows.push({
+            label: "COLLECTION",
+            value: `${pickByHash(["HUMINT","SIGINT","GEOINT","MASINT","OSINT"], eid, 0)} / ${pickByHash(["TIER 1","TIER 2","TIER 3"], eid, 7)}`,
+            redacted: "block",
+        });
+        rows.push({
+            label: "CLASSIFICATION",
+            value: pickByHash(["TS//SI//TK","S//NF","TS//SCI","C//REL FVEY"], eid, 13),
+            redacted: "class",
+        });
+
         return rows;
     };
 
     const details = renderDetails();
     const canTrack = entity.type === "flight" || entity.type === "military-flight" || entity.type === "satellite";
+
+    const redactedClass = (r?: "block" | "bracket" | "class"): string => {
+        if (!r) return "ei__value";
+        if (r === "bracket") return "ei__value ei__value--redacted-bracket";
+        if (r === "class")   return "ei__value ei__value--redacted-class";
+        return "ei__value ei__value--redacted";
+    };
 
     return (
         <div
@@ -252,7 +419,7 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
             {details.slice(0, 3).map((row) => (
                 <div key={row.label} className="ei__row">
                     <span className="ei__label">{row.label}</span>
-                    <span className="ei__value">{row.value}</span>
+                    <span className={redactedClass(row.redacted)}>{row.value}</span>
                 </div>
             ))}
 
@@ -260,7 +427,7 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
             {expanded && details.slice(3).map((row) => (
                 <div key={row.label} className="ei__row">
                     <span className="ei__label">{row.label}</span>
-                    <span className="ei__value">{row.value}</span>
+                    <span className={redactedClass(row.redacted)}>{row.value}</span>
                 </div>
             ))}
 
@@ -285,6 +452,59 @@ export function EntityInspector({ entity, onClose }: EntityInspectorProps) {
                     </button>
                 )}
             </div>
+
+            {/* Live telemetry readout */}
+            {isTracking && trackingTelemetry && (() => {
+                const isFlight = entity.type === "flight" || entity.type === "military-flight";
+                const isSat = entity.type === "satellite";
+                return (
+                    <div className="ei__telemetry">
+                        {isFlight && <>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">SPD</span>
+                                <span className="ei__telem-value">{trackingTelemetry.speed}</span>
+                            </div>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">ALT</span>
+                                <span className="ei__telem-value">{trackingTelemetry.altitude}</span>
+                            </div>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">HDG</span>
+                                <span className="ei__telem-value">{trackingTelemetry.heading}</span>
+                            </div>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">V/S</span>
+                                <span className="ei__telem-value">{trackingTelemetry.vrate}</span>
+                            </div>
+                        </>}
+                        {isSat && <>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">ALT</span>
+                                <span className="ei__telem-value">{trackingTelemetry.altitude}</span>
+                            </div>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">SPD</span>
+                                <span className="ei__telem-value">{trackingTelemetry.speed}</span>
+                            </div>
+                            <div className="ei__telem-item">
+                                <span className="ei__telem-label">ORBIT</span>
+                                <span className="ei__telem-value">{trackingTelemetry.heading}</span>
+                            </div>
+                        </>}
+                    </div>
+                );
+            })()}
+
+            {/* NORAD Scope overlay — satellite tracking only, rendered to body via portal */}
+            <NoradScope
+                visible={isTracking && entity.type === "satellite"}
+                satelliteName={entity.name || entity.id}
+                noradId={String(entity.properties?.id ?? entity.id)}
+                altitude={trackingTelemetry?.altitude ?? "—"}
+                orbitType={trackingTelemetry?.heading ?? entity.properties?.orbitCategory ?? "—"}
+                lat={scopeLat}
+                lon={scopeLon}
+            />
         </div>
     );
 }

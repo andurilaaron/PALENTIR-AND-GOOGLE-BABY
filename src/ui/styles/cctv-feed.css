@@ -206,3 +206,47 @@
     background: rgba(245, 158, 11, 0.15);
     color: #f59e0b;
 }
+
+/* REC indicator — top-left corner of an active stream */
+.cv__rec {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 4px;
+    padding: 3px 7px 3px 5px;
+    pointer-events: none;
+}
+
+.cv__rec-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #ef4444;
+    box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
+    animation: cv-rec-pulse 1.2s ease-in-out infinite;
+    flex-shrink: 0;
+}
+
+@keyframes cv-rec-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.2; }
+}
+
+.cv__rec-label {
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+/* RECONNECTING variant of the placeholder label */
+.cv__placeholder-label--reconnecting {
+    color: #f59e0b;
+    animation: cv-pulse 0.8s ease-in-out infinite;
+}

@@ -100,11 +100,13 @@ export async function fetchAircraft(
                 return ac;
             }
             console.warn(`[adsbApi] OpenSky HTTP ${res.status} — trying fallback`);
-            // If we get a non‑2xx response, assume OpenSky is unavailable
+            // If we get a non‑2xx response, assume OpenSky is temporarily unavailable
             openSkyAvailable = false;
+            setTimeout(() => { openSkyAvailable = true; }, 60000);
         } catch (e) {
-            console.warn("[adsbApi] OpenSky request failed — disabling OpenSky proxy:", e);
+            console.warn("[adsbApi] OpenSky request failed — disabling OpenSky proxy for 60s:", e);
             openSkyAvailable = false;
+            setTimeout(() => { openSkyAvailable = true; }, 60000);
         }
     }
 

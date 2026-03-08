@@ -1,0 +1,98 @@
+/* ============================================
+   ThreatconIndicator — Military Readiness Bar
+   ============================================ */
+
+.tc-bar {
+    position: fixed;
+    top: 32px;
+    left: 16px;
+    z-index: 900;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    background: rgba(10, 16, 28, 0.9);
+    -webkit-backdrop-filter: blur(18px) saturate(1.4);
+    backdrop-filter: blur(18px) saturate(1.4);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    pointer-events: auto;
+}
+
+/* Base chip */
+.tc-chip {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.tc-chip:hover {
+    filter: brightness(1.25);
+}
+
+.tc-chip__label {
+    opacity: 0.55;
+    font-weight: 600;
+}
+
+.tc-chip__value {
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+/* Color variants */
+.tc-chip--green {
+    color: #4ade80;
+    border-color: rgba(74, 222, 128, 0.3);
+    background: rgba(74, 222, 128, 0.08);
+}
+
+.tc-chip--cyan {
+    color: #22d3ee;
+    border-color: rgba(34, 211, 238, 0.3);
+    background: rgba(34, 211, 238, 0.08);
+}
+
+.tc-chip--amber {
+    color: #fbbf24;
+    border-color: rgba(251, 191, 36, 0.3);
+    background: rgba(251, 191, 36, 0.08);
+}
+
+.tc-chip--red {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.tc-chip--red-pulse {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.1);
+    animation: tc-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes tc-pulse {
+    0%, 100% {
+        opacity: 1;
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+    50% {
+        opacity: 0.7;
+        box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.35);
+    }
+}

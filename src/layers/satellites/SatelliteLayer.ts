@@ -42,6 +42,11 @@ export class SatelliteLayer implements LayerPlugin {
     lastRefresh?: number;
 
     private records: SatelliteRecord[] = [];
+
+    /** Public accessor for satellite intel analysis */
+    getRecords(): SatelliteRecord[] {
+        return this.records;
+    }
     private entityIds: string[] = [];
     private tickCount = 0;
 
@@ -51,6 +56,7 @@ export class SatelliteLayer implements LayerPlugin {
 
     async onAdd(viewer: Viewer): Promise<void> {
         const Cesium = await import("cesium");
+        this.CesiumRef = Cesium;
 
         this.status = "loading";
         try {
@@ -136,6 +142,7 @@ export class SatelliteLayer implements LayerPlugin {
         this.entityIds = [];
         this.records = [];
         this.tickCount = 0;
+        this.CesiumRef = null;
         this.status = "idle";
         console.log("[SatelliteLayer] Removed");
     }
@@ -188,6 +195,9 @@ export class SatelliteLayer implements LayerPlugin {
         }
     }
 
+    // Cached Cesium module — loaded in onAdd, reused in onTick
+    private CesiumRef: typeof import("cesium") | null = null;
+
     onTick(viewer: Viewer, time: JulianDate): void {
         if (!this.enabled || this.records.length === 0) return;
 
@@ -203,8 +213,7 @@ export class SatelliteLayer implements LayerPlugin {
         this.tickCount++;
         if (this.tickCount % TICK_INTERVAL !== 0) return;
 
-        // @ts-ignore — Cesium global from dynamic import
-        const Cesium = window.Cesium;
+        const Cesium = this.CesiumRef;
         if (!Cesium) return;
 
         const jsDate = Cesium.JulianDate.toDate(time);

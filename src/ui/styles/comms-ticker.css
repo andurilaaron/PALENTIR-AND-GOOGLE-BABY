@@ -1,0 +1,64 @@
+/* ============================================
+   CommsTicker — Scrolling Comms Traffic Bar
+   ============================================ */
+
+.ct-ticker {
+    position: fixed;
+    top: 28px;
+    left: 0;
+    right: 0;
+    z-index: 950;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 12px;
+    background: rgba(10, 16, 28, 0.85);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(251, 191, 36, 0.15);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.15);
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.ct-ticker__prefix {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #fbbf24;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    opacity: 0.7;
+    padding-right: 2px;
+}
+
+.ct-ticker__divider {
+    display: inline-block;
+    width: 1px;
+    height: 12px;
+    background: rgba(251, 191, 36, 0.3);
+    margin: 0 10px;
+    flex-shrink: 0;
+}
+
+.ct-ticker__message {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #fbbf24;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity 0.28s ease;
+}
+
+.ct-ticker__message--visible {
+    opacity: 1;
+}
+
+.ct-ticker__message--hidden {
+    opacity: 0;
+}

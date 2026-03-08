@@ -5,18 +5,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Primary: airplanes.live point queries
-      '/api/flights': {
-        target: 'https://api.airplanes.live',
+      // All /api/* requests proxy to the Express backend
+      '/api': {
+        target: 'http://localhost:3001',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/flights/, '/v2')
-      },
-      // Fallback: OpenSky Network — more lenient anonymous rate limits
-      '/api/opensky': {
-        target: 'https://opensky-network.org',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/opensky/, '/api')
       }
     }
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
   }
 })

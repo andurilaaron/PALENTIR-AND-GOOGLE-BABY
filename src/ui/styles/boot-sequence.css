@@ -1,0 +1,117 @@
+/* ============================================
+   BootSequence — Terminal boot overlay
+   ============================================ */
+
+.boot {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #000;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    overflow: hidden;
+
+    /* Subtle vignette for CRT depth */
+    box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.8);
+}
+
+/* Fade-out state — triggered just before unmount */
+.boot--fade-out {
+    animation: boot-fade-out 0.5s ease forwards;
+}
+
+@keyframes boot-fade-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* ---- CRT scanlines (CSS only, no GLSL) ---- */
+.boot__scanlines {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+
+    /* Repeating horizontal lines for scanline illusion */
+    background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.18) 2px,
+        rgba(0, 0, 0, 0.18) 4px
+    );
+
+    /* Slow drift for a "live" CRT feel */
+    animation: boot-scanline-drift 8s linear infinite;
+}
+
+@keyframes boot-scanline-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 0 200px; }
+}
+
+/* ---- Terminal text container ---- */
+.boot__terminal {
+    position: relative;
+    z-index: 2;
+    padding: 48px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 900px;
+    width: 100%;
+}
+
+/* ---- Individual boot lines ---- */
+.boot__line {
+    font-family: ui-monospace, SFMono-Regular, "Courier New", Courier, monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #00ff41;
+    white-space: pre;
+
+    /* Slight green glow for phosphor effect */
+    text-shadow:
+        0 0 6px rgba(0, 255, 65, 0.8),
+        0 0 14px rgba(0, 255, 65, 0.3);
+
+    /* Fade-in + slide from left */
+    animation: boot-line-in 0.18s ease both;
+    transform-origin: left center;
+}
+
+@keyframes boot-line-in {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Lines that contain "[WARN]" get an amber tint */
+.boot__line:has([data-warn]) {
+    color: #fbbf24;
+    text-shadow:
+        0 0 6px rgba(251, 191, 36, 0.8),
+        0 0 14px rgba(251, 191, 36, 0.3);
+}
+
+/* ---- Blinking cursor ---- */
+.boot__cursor {
+    display: inline-block;
+    color: #00ff41;
+    text-shadow:
+        0 0 8px rgba(0, 255, 65, 1),
+        0 0 20px rgba(0, 255, 65, 0.5);
+    margin-left: 2px;
+    animation: boot-cursor-blink 0.75s step-end infinite;
+}
+
+@keyframes boot-cursor-blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+}

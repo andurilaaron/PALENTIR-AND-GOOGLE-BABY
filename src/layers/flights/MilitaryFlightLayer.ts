@@ -9,7 +9,7 @@ import { fetchMilitaryAircraft } from "./adsbApi.ts";
 import type { Aircraft } from "./adsbApi.ts";
 
 const POLL_INTERVAL_MS = 60000;
-const STARTUP_DELAY_MS = 8000;
+const STARTUP_DELAY_MS = 2000;
 const BACKOFF_INTERVALS = [60000, 120000, 300000];
 
 interface FlightState {
@@ -105,6 +105,11 @@ export class MilitaryFlightLayer implements LayerPlugin {
                 state.ac.altitude
             );
             (entity.position as any).setValue(newPos);
+
+            // Update state so the next tick dead-reckons from here, not from the original poll
+            state.ac.longitude += dLon;
+            state.ac.latitude += dLat;
+            state.lastUpdate = now;
         }
     }
 

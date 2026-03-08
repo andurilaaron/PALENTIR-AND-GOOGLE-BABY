@@ -1,0 +1,634 @@
+[
+  {
+    "name": "Ramstein Air Base",
+    "country": "Germany",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 49.437,
+    "lon": 7.600
+  },
+  {
+    "name": "Aviano Air Base",
+    "country": "Italy",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 46.031,
+    "lon": 12.597
+  },
+  {
+    "name": "Incirlik Air Base",
+    "country": "Turkey",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 37.002,
+    "lon": 35.426
+  },
+  {
+    "name": "Al Udeid Air Base",
+    "country": "Qatar",
+    "type": "airfield",
+    "branch": "USAF/USCENTCOM",
+    "lat": 25.117,
+    "lon": 51.315
+  },
+  {
+    "name": "Diego Garcia",
+    "country": "BIOT",
+    "type": "naval/airfield",
+    "branch": "USN/USAF",
+    "lat": -7.312,
+    "lon": 72.411
+  },
+  {
+    "name": "Yokota Air Base",
+    "country": "Japan",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 35.748,
+    "lon": 139.348
+  },
+  {
+    "name": "Kadena Air Base",
+    "country": "Japan",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 26.356,
+    "lon": 127.768
+  },
+  {
+    "name": "Camp Humphreys",
+    "country": "South Korea",
+    "type": "army",
+    "branch": "USA",
+    "lat": 36.963,
+    "lon": 127.029
+  },
+  {
+    "name": "Thule Air Base",
+    "country": "Greenland",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 76.531,
+    "lon": -68.703
+  },
+  {
+    "name": "Naval Station Rota",
+    "country": "Spain",
+    "type": "naval",
+    "branch": "USN",
+    "lat": 36.641,
+    "lon": -6.349
+  },
+  {
+    "name": "Camp Lemonnier",
+    "country": "Djibouti",
+    "type": "army/airfield",
+    "branch": "USCENTCOM",
+    "lat": 11.546,
+    "lon": 43.159
+  },
+  {
+    "name": "Bagram Airfield",
+    "country": "Afghanistan",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 34.946,
+    "lon": 69.265
+  },
+  {
+    "name": "Naval Station Guam",
+    "country": "Guam",
+    "type": "naval",
+    "branch": "USN",
+    "lat": 13.444,
+    "lon": 144.651
+  },
+  {
+    "name": "Andersen AFB",
+    "country": "Guam",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 13.584,
+    "lon": 144.930
+  },
+  {
+    "name": "Pearl Harbor-Hickam",
+    "country": "USA",
+    "type": "naval/airfield",
+    "branch": "USN/USAF",
+    "lat": 21.355,
+    "lon": -157.977
+  },
+  {
+    "name": "Norfolk Naval Station",
+    "country": "USA",
+    "type": "naval",
+    "branch": "USN",
+    "lat": 36.938,
+    "lon": -76.293
+  },
+  {
+    "name": "NSA Bahrain",
+    "country": "Bahrain",
+    "type": "naval",
+    "branch": "USN",
+    "lat": 26.225,
+    "lon": 50.584
+  },
+  {
+    "name": "Ali Al Salem Air Base",
+    "country": "Kuwait",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 29.348,
+    "lon": 47.521
+  },
+  {
+    "name": "Al Dhafra Air Base",
+    "country": "UAE",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 24.248,
+    "lon": 54.548
+  },
+  {
+    "name": "Misawa Air Base",
+    "country": "Japan",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 40.703,
+    "lon": 141.368
+  },
+  {
+    "name": "Hmeimim Air Base",
+    "country": "Syria",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 35.401,
+    "lon": 35.948
+  },
+  {
+    "name": "Tartus Naval Base",
+    "country": "Syria",
+    "type": "naval",
+    "branch": "Russian Navy",
+    "lat": 34.886,
+    "lon": 35.887
+  },
+  {
+    "name": "Sevastopol Naval Base",
+    "country": "Ukraine/Russia",
+    "type": "naval",
+    "branch": "Russian Navy",
+    "lat": 44.614,
+    "lon": 33.525
+  },
+  {
+    "name": "Kaliningrad Chernyakhovsk",
+    "country": "Russia",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 54.605,
+    "lon": 21.793
+  },
+  {
+    "name": "Vladivostok Naval Base",
+    "country": "Russia",
+    "type": "naval",
+    "branch": "Russian Navy",
+    "lat": 43.115,
+    "lon": 131.882
+  },
+  {
+    "name": "Murmansk Naval Base",
+    "country": "Russia",
+    "type": "naval",
+    "branch": "Russian Navy",
+    "lat": 68.973,
+    "lon": 33.074
+  },
+  {
+    "name": "Gadzhiyevo Submarine Base",
+    "country": "Russia",
+    "type": "naval",
+    "branch": "Russian Navy",
+    "lat": 69.254,
+    "lon": 33.318
+  },
+  {
+    "name": "Engels-2 Air Base",
+    "country": "Russia",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 51.490,
+    "lon": 46.170
+  },
+  {
+    "name": "Kubinka Air Base",
+    "country": "Russia",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 55.611,
+    "lon": 36.637
+  },
+  {
+    "name": "Shaykovka Air Base",
+    "country": "Russia",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 54.224,
+    "lon": 34.319
+  },
+  {
+    "name": "Djibouti Chinese Base",
+    "country": "Djibouti",
+    "type": "naval",
+    "branch": "PLAN",
+    "lat": 11.556,
+    "lon": 43.172
+  },
+  {
+    "name": "Yulin Naval Base",
+    "country": "China",
+    "type": "naval",
+    "branch": "PLAN",
+    "lat": 18.224,
+    "lon": 109.576
+  },
+  {
+    "name": "Hainan Island Naval Base",
+    "country": "China",
+    "type": "naval",
+    "branch": "PLAN",
+    "lat": 20.024,
+    "lon": 110.313
+  },
+  {
+    "name": "Fiery Cross Reef",
+    "country": "South China Sea",
+    "type": "naval/airfield",
+    "branch": "PLAN/PLAAF",
+    "lat": 9.553,
+    "lon": 112.895
+  },
+  {
+    "name": "Mischief Reef",
+    "country": "South China Sea",
+    "type": "naval/airfield",
+    "branch": "PLAN",
+    "lat": 9.922,
+    "lon": 115.537
+  },
+  {
+    "name": "Subi Reef",
+    "country": "South China Sea",
+    "type": "airfield",
+    "branch": "PLAAF",
+    "lat": 10.929,
+    "lon": 114.083
+  },
+  {
+    "name": "Woody Island (Yongxing)",
+    "country": "South China Sea",
+    "type": "airfield",
+    "branch": "PLAAF",
+    "lat": 16.836,
+    "lon": 112.337
+  },
+  {
+    "name": "Dalian Naval Base",
+    "country": "China",
+    "type": "naval",
+    "branch": "PLAN",
+    "lat": 38.881,
+    "lon": 121.511
+  },
+  {
+    "name": "HM Naval Base Clyde (Faslane)",
+    "country": "UK",
+    "type": "naval",
+    "branch": "Royal Navy",
+    "lat": 56.072,
+    "lon": -4.801
+  },
+  {
+    "name": "Toulon Naval Base",
+    "country": "France",
+    "type": "naval",
+    "branch": "French Navy",
+    "lat": 43.115,
+    "lon": 5.921
+  },
+  {
+    "name": "Naval Air Station Sigonella",
+    "country": "Italy",
+    "type": "naval/airfield",
+    "branch": "USN/NATO",
+    "lat": 37.401,
+    "lon": 14.922
+  },
+  {
+    "name": "Lakenheath Air Base",
+    "country": "UK",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 52.409,
+    "lon": 0.560
+  },
+  {
+    "name": "Mildenhall Air Base",
+    "country": "UK",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 52.361,
+    "lon": 0.486
+  },
+  {
+    "name": "Brest Naval Base",
+    "country": "France",
+    "type": "naval",
+    "branch": "French Navy",
+    "lat": 48.382,
+    "lon": -4.494
+  },
+  {
+    "name": "Wilhelmshaven Naval Base",
+    "country": "Germany",
+    "type": "naval",
+    "branch": "Bundeswehr",
+    "lat": 53.592,
+    "lon": 8.144
+  },
+  {
+    "name": "Kiel Naval Base",
+    "country": "Germany",
+    "type": "naval",
+    "branch": "Bundeswehr",
+    "lat": 54.337,
+    "lon": 10.138
+  },
+  {
+    "name": "Souda Bay NATO Base",
+    "country": "Greece",
+    "type": "naval/airfield",
+    "branch": "NATO/USN",
+    "lat": 35.488,
+    "lon": 24.148
+  },
+  {
+    "name": "Lajes Field",
+    "country": "Portugal (Azores)",
+    "type": "airfield",
+    "branch": "USAF/NATO",
+    "lat": 38.762,
+    "lon": -27.091
+  },
+  {
+    "name": "Bandar Abbas Naval Base",
+    "country": "Iran",
+    "type": "naval",
+    "branch": "IRIN",
+    "lat": 27.188,
+    "lon": 56.278
+  },
+  {
+    "name": "Esfahan Air Base",
+    "country": "Iran",
+    "type": "airfield",
+    "branch": "IRIAF",
+    "lat": 32.619,
+    "lon": 51.694
+  },
+  {
+    "name": "Mehrabad Air Base",
+    "country": "Iran",
+    "type": "airfield",
+    "branch": "IRIAF",
+    "lat": 35.689,
+    "lon": 51.313
+  },
+  {
+    "name": "Shahid Nojeh Air Base",
+    "country": "Iran",
+    "type": "airfield",
+    "branch": "IRIAF",
+    "lat": 35.211,
+    "lon": 48.652
+  },
+  {
+    "name": "Prince Sultan Air Base",
+    "country": "Saudi Arabia",
+    "type": "airfield",
+    "branch": "RSAF/USAF",
+    "lat": 24.063,
+    "lon": 47.581
+  },
+  {
+    "name": "King Abdulaziz Air Base",
+    "country": "Saudi Arabia",
+    "type": "airfield",
+    "branch": "RSAF",
+    "lat": 21.481,
+    "lon": 39.156
+  },
+  {
+    "name": "Tabuk Air Base",
+    "country": "Saudi Arabia",
+    "type": "airfield",
+    "branch": "RSAF",
+    "lat": 28.365,
+    "lon": 36.619
+  },
+  {
+    "name": "Muwaffaq Salti Air Base",
+    "country": "Jordan",
+    "type": "airfield",
+    "branch": "RJAF",
+    "lat": 31.826,
+    "lon": 37.141
+  },
+  {
+    "name": "Ain Assad Air Base",
+    "country": "Iraq",
+    "type": "airfield",
+    "branch": "USAF/Iraqi AF",
+    "lat": 33.786,
+    "lon": 42.442
+  },
+  {
+    "name": "Balad Air Base",
+    "country": "Iraq",
+    "type": "airfield",
+    "branch": "Iraqi AF",
+    "lat": 33.940,
+    "lon": 44.361
+  },
+  {
+    "name": "Haifa Naval Base",
+    "country": "Israel",
+    "type": "naval",
+    "branch": "Israeli Navy",
+    "lat": 32.823,
+    "lon": 35.008
+  },
+  {
+    "name": "Nevatim Air Base",
+    "country": "Israel",
+    "type": "airfield",
+    "branch": "IAF",
+    "lat": 31.208,
+    "lon": 35.012
+  },
+  {
+    "name": "Tel Nof Air Base",
+    "country": "Israel",
+    "type": "airfield",
+    "branch": "IAF",
+    "lat": 31.839,
+    "lon": 34.818
+  },
+  {
+    "name": "Deir ez-Zor Air Base",
+    "country": "Syria",
+    "type": "airfield",
+    "branch": "SyAAF",
+    "lat": 35.285,
+    "lon": 40.175
+  },
+  {
+    "name": "Pine Gap",
+    "country": "Australia",
+    "type": "signals intelligence",
+    "branch": "CIA/ASD",
+    "lat": -23.799,
+    "lon": 133.737
+  },
+  {
+    "name": "RAAF Base Darwin",
+    "country": "Australia",
+    "type": "airfield",
+    "branch": "RAAF",
+    "lat": -12.424,
+    "lon": 130.874
+  },
+  {
+    "name": "RAAF Base Tindal",
+    "country": "Australia",
+    "type": "airfield",
+    "branch": "RAAF",
+    "lat": -14.521,
+    "lon": 132.378
+  },
+  {
+    "name": "HMAS Stirling",
+    "country": "Australia",
+    "type": "naval",
+    "branch": "RAN",
+    "lat": -32.182,
+    "lon": 115.698
+  },
+  {
+    "name": "Camp Schwab (Okinawa)",
+    "country": "Japan",
+    "type": "marine",
+    "branch": "USMC",
+    "lat": 26.548,
+    "lon": 128.046
+  },
+  {
+    "name": "DMZ Camp Bonifas",
+    "country": "South Korea",
+    "type": "army",
+    "branch": "UN Command/USA",
+    "lat": 37.897,
+    "lon": 126.671
+  },
+  {
+    "name": "Osan Air Base",
+    "country": "South Korea",
+    "type": "airfield",
+    "branch": "USAF",
+    "lat": 37.090,
+    "lon": 127.030
+  },
+  {
+    "name": "Changi Naval Base",
+    "country": "Singapore",
+    "type": "naval",
+    "branch": "RSN",
+    "lat": 1.373,
+    "lon": 104.000
+  },
+  {
+    "name": "Sembawang Naval Base",
+    "country": "Singapore",
+    "type": "naval",
+    "branch": "USN/RSN",
+    "lat": 1.446,
+    "lon": 103.826
+  },
+  {
+    "name": "Subic Bay",
+    "country": "Philippines",
+    "type": "naval",
+    "branch": "Philippine Navy/USAF",
+    "lat": 14.804,
+    "lon": 120.271
+  },
+  {
+    "name": "Reykjavik NATO Air Station",
+    "country": "Iceland",
+    "type": "airfield",
+    "branch": "NATO",
+    "lat": 64.130,
+    "lon": -21.940
+  },
+  {
+    "name": "Luanda Naval Base",
+    "country": "Angola",
+    "type": "naval",
+    "branch": "Angolan Navy",
+    "lat": -8.836,
+    "lon": 13.230
+  },
+  {
+    "name": "Berbera Military Base",
+    "country": "Somalia",
+    "type": "naval/airfield",
+    "branch": "UAE",
+    "lat": 10.388,
+    "lon": 45.153
+  },
+  {
+    "name": "Frunze Air Base",
+    "country": "Kyrgyzstan",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 42.852,
+    "lon": 74.478
+  },
+  {
+    "name": "Karshi-Khanabad",
+    "country": "Uzbekistan",
+    "type": "airfield",
+    "branch": "Uzbek AF",
+    "lat": 38.836,
+    "lon": 65.921
+  },
+  {
+    "name": "Erebuni Air Base",
+    "country": "Armenia",
+    "type": "airfield",
+    "branch": "Russian AF",
+    "lat": 40.122,
+    "lon": 44.465
+  },
+  {
+    "name": "Tallinn Naval Base",
+    "country": "Estonia",
+    "type": "naval",
+    "branch": "Estonian Navy/NATO",
+    "lat": 59.449,
+    "lon": 24.742
+  }
+]

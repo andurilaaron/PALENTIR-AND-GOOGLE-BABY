@@ -134,6 +134,29 @@
     font-size: 0.78rem;
 }
 
+/* Redacted / classified field values */
+
+/* Default redacted: block chars (████) — red-tinted */
+.ei__value--redacted {
+    color: rgba(239, 68, 68, 0.7);
+    letter-spacing: 0.05em;
+}
+
+/* Bracketed advisory text like [REDACTED — LEVEL 4] — amber */
+.ei__value--redacted-bracket {
+    color: rgba(245, 158, 11, 0.85);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+}
+
+/* Classification markings (TS//SI//TK etc.) — brighter red, tighter spacing */
+.ei__value--redacted-class {
+    color: rgba(239, 68, 68, 0.9);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
 /* Expand button */
 .ei__expand {
     width: 100%;
@@ -190,4 +213,38 @@
     background: rgba(91, 156, 245, 0.25);
     border-color: var(--ei-accent, #5b9cf5);
     color: var(--ei-accent, #5b9cf5);
+}
+
+/* Live telemetry bar — shown below actions when tracking */
+.ei__telemetry {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(76, 214, 228, 0.3);
+    padding: 10px 14px;
+    row-gap: 8px;
+    column-gap: 12px;
+}
+
+.ei__telem-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.ei__telem-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #5a7a94;
+}
+
+.ei__telem-value {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #4cd6e4;
+    letter-spacing: 0.04em;
 }

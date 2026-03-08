@@ -1,0 +1,210 @@
+/* ============================================
+   NetworkGraph — Link Analysis Floating Panel
+   ============================================ */
+
+.ng {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 640px;
+    height: 480px;
+    background: rgba(6, 10, 20, 0.94);
+    -webkit-backdrop-filter: blur(20px) saturate(1.6);
+    backdrop-filter: blur(20px) saturate(1.6);
+    border: 1px solid rgba(96, 165, 250, 0.35);
+    border-radius: 12px;
+    color: #dce8f8;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.75rem;
+    box-shadow:
+        0 0 0 1px rgba(96, 165, 250, 0.1),
+        0 0 40px rgba(96, 165, 250, 0.12),
+        0 20px 60px rgba(0, 0, 0, 0.7);
+    z-index: 1200;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: ng-in 0.2s ease;
+    user-select: none;
+}
+
+@keyframes ng-in {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+/* Header bar */
+.ng__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(96, 165, 250, 0.2);
+    background: rgba(96, 165, 250, 0.07);
+    flex-shrink: 0;
+}
+
+.ng__header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.ng__title-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+}
+
+.ng__eyebrow {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #60a5fa;
+    text-transform: uppercase;
+}
+
+.ng__title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+}
+
+.ng__badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ng__node-count {
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #4b6a84;
+    padding: 2px 6px;
+    border: 1px solid rgba(75, 106, 132, 0.4);
+    border-radius: 4px;
+}
+
+.ng__close {
+    background: transparent;
+    border: none;
+    color: #6a8c9e;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+}
+
+.ng__close:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Canvas body */
+.ng__canvas-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.ng__canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #0a101c;
+    cursor: crosshair;
+}
+
+.ng__canvas--dragging {
+    cursor: grabbing;
+}
+
+/* Selected node info strip at bottom */
+.ng__info-bar {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.02);
+    min-height: 32px;
+}
+
+.ng__info-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ng__info-name {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.04em;
+}
+
+.ng__info-type {
+    font-size: 0.62rem;
+    color: #5a7a94;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ng__info-connections {
+    font-size: 0.6rem;
+    color: #4b6a84;
+    margin-left: auto;
+    letter-spacing: 0.06em;
+}
+
+.ng__info-hint {
+    font-size: 0.6rem;
+    color: #3a5568;
+    letter-spacing: 0.04em;
+    margin-left: auto;
+}
+
+/* Legend strip */
+.ng__legend {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 5px 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+}
+
+.ng__legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.ng__legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.ng__legend-label {
+    font-size: 0.58rem;
+    color: #5a7a94;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}

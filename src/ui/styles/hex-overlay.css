@@ -1,0 +1,45 @@
+/* ============================================
+   HexOverlay — Decorative Hex Telemetry Dump
+   ============================================ */
+
+.hx-overlay {
+    position: fixed;
+    right: 16px;
+    bottom: 200px;
+    z-index: 800;
+    width: 220px;
+    height: 180px;
+    overflow: hidden;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 1px;
+    opacity: 0.3;
+    /* No background — fully transparent */
+    background: transparent;
+}
+
+.hx-line {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.55rem;
+    color: #00ff41;
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    animation: hx-fadein 0.35s ease forwards;
+    /* Start slightly invisible for fade-in effect */
+    opacity: 0;
+}
+
+@keyframes hx-fadein {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

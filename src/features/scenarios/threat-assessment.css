@@ -1,0 +1,272 @@
+/* ── Threat Assessment Panel ─────────────────────────────────────── */
+
+.ta-anchor {
+    position: absolute;
+    top: 60px;
+    left: 16px;
+    z-index: 1002;
+    pointer-events: auto;
+}
+
+.ta {
+    background: rgba(4, 12, 20, 0.94);
+    backdrop-filter: blur(20px) saturate(1.5);
+    border: 1px solid rgba(0, 255, 140, 0.18);
+    border-radius: 10px;
+    width: 420px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+    color: #b0ffcc;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 255, 140, 0.2) transparent;
+}
+
+.ta::-webkit-scrollbar {
+    width: 4px;
+}
+.ta::-webkit-scrollbar-thumb {
+    background: rgba(0, 255, 140, 0.2);
+    border-radius: 2px;
+}
+
+/* ── Header bar ───────────────────────────────────────────────────── */
+
+.ta__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid rgba(0, 255, 140, 0.12);
+    position: sticky;
+    top: 0;
+    background: rgba(4, 12, 20, 0.97);
+    z-index: 1;
+}
+
+.ta__title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #00ff8c;
+}
+
+.ta__close {
+    background: none;
+    border: none;
+    color: rgba(176, 255, 204, 0.45);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 2px 6px;
+    transition: color 0.15s;
+}
+.ta__close:hover {
+    color: #b0ffcc;
+}
+
+/* ── Brief body ───────────────────────────────────────────────────── */
+
+.ta__body {
+    padding: 10px 14px 16px;
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+/* Divider line — rendered by repeating character in content */
+.ta__divider {
+    color: rgba(0, 255, 140, 0.25);
+    font-size: 9px;
+    letter-spacing: -0.02em;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 6px 0;
+    /* stretch across full width with character repeat */
+}
+.ta__divider::after {
+    /* Repeat '=' across the full width */
+    content: "=================================================================================";
+    display: inline;
+}
+
+/* ── Banner block ──────────────────────────────────────────────────── */
+
+.ta__banner {
+    padding: 6px 0 4px;
+}
+
+.ta__banner-line {
+    font-size: 10px;
+    color: #b0ffcc;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────── */
+
+.ta__section {
+    margin: 10px 0 6px;
+}
+
+.ta__section-hdr {
+    font-size: 10px;
+    font-weight: 700;
+    color: #22d3ee;
+    letter-spacing: 0.08em;
+    margin-bottom: 5px;
+}
+
+.ta__para {
+    color: rgba(176, 255, 204, 0.75);
+    font-size: 10px;
+    line-height: 1.55;
+}
+
+/* ── Key-value rows ─────────────────────────────────────────────────── */
+
+.ta__kv {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 2px;
+}
+
+.ta__key {
+    color: rgba(176, 255, 204, 0.45);
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    min-width: 140px;
+    flex-shrink: 0;
+}
+
+.ta__val {
+    color: #b0ffcc;
+    font-size: 9px;
+}
+
+.ta__val--warn {
+    color: #f59e0b;
+    font-weight: 700;
+}
+
+/* ── Target list ───────────────────────────────────────────────────── */
+
+.ta__target {
+    display: flex;
+    gap: 6px;
+    align-items: baseline;
+    margin-bottom: 3px;
+    font-size: 9px;
+}
+
+.ta__target-cat {
+    min-width: 74px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.ta__target--primary .ta__target-cat   { color: #ef4444; }
+.ta__target--secondary .ta__target-cat { color: #f59e0b; }
+.ta__target--interest .ta__target-cat  { color: #22d3ee; }
+
+.ta__target-label {
+    color: #b0ffcc;
+    font-weight: 600;
+    min-width: 90px;
+}
+
+.ta__target-coord {
+    color: rgba(176, 255, 204, 0.45);
+}
+
+/* ── Threat list ───────────────────────────────────────────────────── */
+
+.ta__threat {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: baseline;
+    margin-bottom: 3px;
+    font-size: 9px;
+    padding-left: 4px;
+    border-left: 2px solid rgba(176, 255, 204, 0.08);
+}
+
+.ta__threat-bullet {
+    color: rgba(176, 255, 204, 0.35);
+    flex-shrink: 0;
+}
+
+.ta__threat-name {
+    color: #b0ffcc;
+    font-weight: 600;
+    min-width: 100px;
+}
+
+.ta__threat-loc {
+    color: rgba(176, 255, 204, 0.4);
+}
+
+.ta__threat-range {
+    color: rgba(176, 255, 204, 0.55);
+}
+
+.ta__threat-country {
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+.ta__threat-country--hostile  { color: #ef4444; }
+.ta__threat-country--friendly { color: #3b82f6; }
+
+/* ── Placeholder text ──────────────────────────────────────────────── */
+
+.ta__placeholder {
+    color: rgba(176, 255, 204, 0.3);
+    font-style: italic;
+    font-size: 9px;
+    padding: 4px 0;
+}
+
+/* ── Risk bar ──────────────────────────────────────────────────────── */
+
+.ta__risk-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.ta__risk-fill {
+    color: #ef4444;
+    font-size: 10px;
+    letter-spacing: -0.04em;
+    opacity: 0.85;
+}
+
+.ta__risk-label {
+    color: #ef4444;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+
+/* ── Redacted / block characters ───────────────────────────────────── */
+
+.ta__redacted {
+    color: rgba(176, 255, 204, 0.6);
+    font-size: 9px;
+}
+
+.ta__block {
+    color: rgba(176, 255, 204, 0.75);
+    letter-spacing: -0.02em;
+}
+
+/* ── Footer ────────────────────────────────────────────────────────── */
+
+.ta__footer {
+    font-size: 9px;
+    color: rgba(176, 255, 204, 0.5);
+    padding: 4px 0 2px;
+    line-height: 1.7;
+    letter-spacing: 0.04em;
+}

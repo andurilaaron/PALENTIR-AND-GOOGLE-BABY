@@ -1,0 +1,56 @@
+/* ============================================
+   ClassBanner — Government classification bar
+   ============================================ */
+
+.cb {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 28px;
+    z-index: 9998;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+
+    background: #8b0000;
+
+    /* Gold/yellow bottom border for authority */
+    border-bottom: 1px solid #b8960c;
+
+    /* Subtle inner top highlight */
+    box-shadow:
+        inset 0 1px 0 rgba(255, 220, 80, 0.12),
+        0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+/* ---- Shared text styles ---- */
+.cb__left,
+.cb__right {
+    font-family: ui-monospace, SFMono-Regular, "Courier New", Courier, monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    user-select: none;
+}
+
+/* ---- Left: classification markings ---- */
+.cb__left {
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* ---- Right: demo notice with slow pulse ---- */
+.cb__right {
+    color: rgba(255, 255, 255, 0.92);
+    animation: cb-pulse 3s ease-in-out infinite;
+}
+
+@keyframes cb-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.45; }
+}

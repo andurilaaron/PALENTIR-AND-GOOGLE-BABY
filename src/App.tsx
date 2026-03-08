@@ -14,6 +14,8 @@ import { SatelliteImageryLayer } from "./layers/imagery/index.ts";
 import { CrimeLayer } from "./layers/crime/CrimeLayer.ts";
 import { VehicleDetectionLayer } from "./layers/detection/index.ts";
 import { CountryBordersLayer } from "./layers/borders/index.ts";
+import { SubmarineCableLayer, NuclearFacilityLayer } from "./layers/infrastructure/index.ts";
+import { MilitaryBaseLayer, MissileRangeLayer } from "./layers/military/index.ts";
 import { createPostFxEngine } from "./postfx/index.ts";
 import type { PostFxEngine } from "./postfx/index.ts";
 import { ClockController } from "./features/playback/index.ts";
@@ -26,6 +28,13 @@ import { EntityInspector } from "./ui/EntityInspector.tsx";
 import type { InspectedEntity } from "./ui/EntityInspector.tsx";
 import { CCTVFeedPanel } from "./ui/CCTVFeedPanel.tsx";
 import type { CCTVCamera } from "./layers/cctv/cctvData.ts";
+import { BootSequence } from "./ui/BootSequence.tsx";
+import { ClassBanner } from "./ui/ClassBanner.tsx";
+import { ThreatconIndicator } from "./ui/ThreatconIndicator.tsx";
+import { HexOverlay } from "./ui/HexOverlay.tsx";
+import { CommsTicker } from "./ui/CommsTicker.tsx";
+import { InterceptAlerts } from "./ui/InterceptAlerts.tsx";
+import { SearchBar } from "./ui/SearchBar.tsx";
 
 declare global {
     interface Window {
@@ -38,6 +47,7 @@ export default function App() {
     const [viewer, setViewer] = useState<Viewer | null>(null);
     const [pfxEngine, setPfxEngine] = useState<PostFxEngine | null>(null);
     const [inspectedEntity, setInspectedEntity] = useState<InspectedEntity | null>(null);
+    const [booted, setBooted] = useState(false);
 
     // Derive selected CCTV camera from inspected entity
     const cctvRecord: CCTVCamera | null =
@@ -92,6 +102,10 @@ export default function App() {
             LayerRegistry.register(new CCTVLayer());
             LayerRegistry.register(new VehicleDetectionLayer());
             LayerRegistry.register(new CountryBordersLayer());
+            LayerRegistry.register(new SubmarineCableLayer());
+            LayerRegistry.register(new NuclearFacilityLayer());
+            LayerRegistry.register(new MilitaryBaseLayer());
+            LayerRegistry.register(new MissileRangeLayer());
 
             // Initialize clock controller after layers are registered
             await ClockController.attach(v);
@@ -151,6 +165,12 @@ export default function App() {
                     type = "crime";
                 } else if (props.isDetection) {
                     type = "detection";
+                } else if (props.isCable) {
+                    type = "cable";
+                } else if (props.isNuclear) {
+                    type = "nuclear";
+                } else if (props.isMilitaryBase) {
+                    type = "military-base";
                 }
 
                 setInspectedEntity({
@@ -178,6 +198,14 @@ export default function App() {
     return (
         <ViewerProvider viewer={viewer}>
             <div id="palentir-app">
+                {/* Boot sequence overlay — sits on top, unmounts after completion */}
+                {!booted && <BootSequence onComplete={() => setBooted(true)} />}
+
+                {/* Classification banner — always on top */}
+                <ClassBanner />
+                <CommsTicker />
+                <SearchBar />
+
                 <div ref={containerRef} id="cesium-container" />
 
                 <LayerPanel />
@@ -190,6 +218,15 @@ export default function App() {
                 <ShotPlannerPanel />
                 <ScenarioPanel />
                 <PlaybackBar />
+
+                {/* Threat condition indicators */}
+                <ThreatconIndicator />
+
+                {/* Intercept alerts — top-right with audio */}
+                <InterceptAlerts />
+
+                {/* Decorative hex telemetry overlay */}
+                <HexOverlay />
 
                 {/* Unified entity inspector — handles ALL entity types */}
                 <EntityInspector

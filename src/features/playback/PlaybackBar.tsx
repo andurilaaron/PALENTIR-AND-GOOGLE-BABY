@@ -38,6 +38,10 @@ const PILL_COLORS: Record<string, string> = {
     cctv: "#fbbf24",
     "vehicle-detection": "#d4a017",
     "country-borders": "#4a90d9",
+    "submarine-cables": "#22d3ee",
+    "nuclear-facilities": "#f59e0b",
+    "military-bases": "#ef4444",
+    "missile-ranges": "#f87171",
 };
 
 const EVENT_CATEGORIES = [

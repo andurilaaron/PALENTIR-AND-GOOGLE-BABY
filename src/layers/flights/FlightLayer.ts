@@ -104,6 +104,11 @@ export class FlightLayer implements LayerPlugin {
                 state.ac.altitude
             );
             (entity.position as any).setValue(newPos);
+
+            // Update state so the next tick dead-reckons from here, not from the original poll
+            state.ac.longitude += dLon;
+            state.ac.latitude += dLat;
+            state.lastUpdate = now;
         }
     }
 

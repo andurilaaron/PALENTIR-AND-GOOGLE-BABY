@@ -1,0 +1,152 @@
+/* ── Intercept Alerts ───────────────────────────────────────────────── */
+
+.ia__root {
+    position: fixed;
+    top: 60px;
+    right: 16px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    pointer-events: none;
+}
+
+/* Mute button — sits above the stack, pointer-events re-enabled */
+.ia__mute {
+    pointer-events: auto;
+    background: rgba(10, 16, 28, 0.82);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(100, 140, 200, 0.18);
+    border-radius: 6px;
+    padding: 3px 7px;
+    font-size: 13px;
+    cursor: pointer;
+    color: rgba(220, 232, 248, 0.7);
+    transition: background 0.15s, color 0.15s;
+    align-self: flex-end;
+    margin-bottom: 2px;
+}
+.ia__mute:hover {
+    background: rgba(10, 16, 28, 0.95);
+    color: #dce8f8;
+}
+.ia__mute--muted {
+    opacity: 0.45;
+}
+
+/* ── Alert stack ─────────────────────────────────────────────────────── */
+
+.ia__stack {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+    width: 450px;
+}
+
+/* ── Individual card ─────────────────────────────────────────────────── */
+
+.ia__card {
+    pointer-events: auto;
+    width: 450px;
+    background: rgba(8, 14, 26, 0.92);
+    backdrop-filter: blur(18px) saturate(1.3);
+    border: 1px solid rgba(100, 140, 200, 0.15);
+    border-radius: 7px;
+    padding: 8px 10px 6px;
+    font-family: ui-monospace, SFMono-Regular, "Courier New", monospace;
+    font-size: 0.65rem;
+    line-height: 1.45;
+    border-left-width: 4px;
+    border-left-style: solid;
+
+    /* Slide in from right */
+    animation: ia-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── Priority colours ───────────────────────────────────────────────── */
+
+.ia__card--info {
+    border-left-color: #22d3ee;
+    color: #a5f3fc;
+}
+.ia__card--info .ia__icon {
+    color: #22d3ee;
+}
+
+.ia__card--warning {
+    border-left-color: #f59e0b;
+    color: #fde68a;
+}
+.ia__card--warning .ia__icon {
+    color: #f59e0b;
+}
+
+.ia__card--critical {
+    border-left-color: #ef4444;
+    color: #fca5a5;
+    animation:
+        ia-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) both,
+        ia-pulse-border 1.2s ease-in-out infinite;
+}
+.ia__card--critical .ia__icon {
+    color: #ef4444;
+}
+
+/* ── Card internals ─────────────────────────────────────────────────── */
+
+.ia__card-message {
+    font-size: 0.65rem;
+    letter-spacing: 0.03em;
+    margin-bottom: 4px;
+    word-break: break-word;
+}
+
+.ia__icon {
+    font-size: 0.7rem;
+    margin-right: 2px;
+}
+
+.ia__card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ia__type {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    opacity: 0.55;
+}
+
+.ia__ts {
+    font-size: 0.58rem;
+    opacity: 0.45;
+    letter-spacing: 0.04em;
+}
+
+/* ── Animations ──────────────────────────────────────────────────────── */
+
+@keyframes ia-slide-in {
+    from {
+        opacity: 0;
+        transform: translateX(32px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes ia-pulse-border {
+    0%, 100% {
+        border-left-color: #ef4444;
+        box-shadow: -2px 0 8px rgba(239, 68, 68, 0.0);
+    }
+    50% {
+        border-left-color: #ff6b6b;
+        box-shadow: -2px 0 12px rgba(239, 68, 68, 0.45);
+    }
+}
