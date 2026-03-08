@@ -35,6 +35,8 @@ import { HexOverlay } from "./ui/HexOverlay.tsx";
 import { CommsTicker } from "./ui/CommsTicker.tsx";
 import { InterceptAlerts } from "./ui/InterceptAlerts.tsx";
 import { SearchBar } from "./ui/SearchBar.tsx";
+import { ZoomControls } from "./ui/ZoomControls.tsx";
+import { AddressFinder } from "./ui/AddressFinder.tsx";
 
 declare global {
     interface Window {
@@ -224,6 +226,12 @@ export default function App() {
 
                 {/* Intercept alerts — top-right with audio */}
                 <InterceptAlerts />
+
+                {/* Zoom controls — right side */}
+                <ZoomControls />
+
+                {/* Address finder — top-right panel */}
+                <AddressFinder />
 
                 {/* Decorative hex telemetry overlay */}
                 <HexOverlay />
