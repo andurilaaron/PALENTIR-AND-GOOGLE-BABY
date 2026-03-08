@@ -23,7 +23,7 @@ import { LayerPanel } from "./ui/LayerPanel.tsx";
 import { PostFxPanel } from "./ui/PostFxPanel.tsx";
 import { PlaybackBar } from "./features/playback/index.ts";
 import { ShotPlannerPanel } from "./features/shot-planner/ShotPlannerPanel.tsx";
-import { ScenarioPanel } from "./features/scenarios/index.ts";
+// import { ScenarioPanel } from "./features/scenarios/index.ts";
 import { EntityInspector } from "./ui/EntityInspector.tsx";
 import type { InspectedEntity } from "./ui/EntityInspector.tsx";
 import { CCTVFeedPanel } from "./ui/CCTVFeedPanel.tsx";
@@ -33,7 +33,7 @@ import { ClassBanner } from "./ui/ClassBanner.tsx";
 import { ThreatconIndicator } from "./ui/ThreatconIndicator.tsx";
 import { HexOverlay } from "./ui/HexOverlay.tsx";
 import { CommsTicker } from "./ui/CommsTicker.tsx";
-import { InterceptAlerts } from "./ui/InterceptAlerts.tsx";
+// import { InterceptAlerts } from "./ui/InterceptAlerts.tsx";
 import { SearchBar } from "./ui/SearchBar.tsx";
 import { ZoomControls } from "./ui/ZoomControls.tsx";
 import { AddressFinder } from "./ui/AddressFinder.tsx";
@@ -218,14 +218,14 @@ export default function App() {
                     onClose={() => setInspectedEntity(null)}
                 />
                 <ShotPlannerPanel />
-                <ScenarioPanel />
+                {/* <ScenarioPanel /> */}
                 <PlaybackBar />
 
                 {/* Threat condition indicators */}
                 <ThreatconIndicator />
 
-                {/* Intercept alerts — top-right with audio */}
-                <InterceptAlerts />
+                {/* Intercept alerts disabled — audio was disruptive */}
+                {/* <InterceptAlerts /> */}
 
                 {/* Zoom controls — right side */}
                 <ZoomControls />
