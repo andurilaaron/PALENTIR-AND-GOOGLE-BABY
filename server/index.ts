@@ -28,7 +28,7 @@ app.use(
     createProxyMiddleware({
         target: "https://api.airplanes.live",
         changeOrigin: true,
-        pathRewrite: { "^/api/flights": "/v2" },
+        pathRewrite: { "^/": "/v2/" },
         on: {
             proxyRes: (_proxyRes, _req, _res) => {
                 // Allow CORS from any origin in dev
@@ -44,7 +44,7 @@ app.use(
     createProxyMiddleware({
         target: "https://opensky-network.org",
         changeOrigin: true,
-        pathRewrite: { "^/api/opensky": "/api" },
+        pathRewrite: { "^/": "/api/" },
         on: {
             proxyRes: (_proxyRes, _req, _res) => {
                 _proxyRes.headers["access-control-allow-origin"] = "*";
@@ -59,7 +59,7 @@ app.use(
     createProxyMiddleware({
         target: "https://overpass-api.de",
         changeOrigin: true,
-        pathRewrite: { "^/api/overpass": "/api" },
+        pathRewrite: { "^/": "/api/" },
         on: {
             proxyRes: (_proxyRes, _req, _res) => {
                 _proxyRes.headers["access-control-allow-origin"] = "*";
@@ -74,7 +74,7 @@ app.use(
     createProxyMiddleware({
         target: "https://earthquake.usgs.gov",
         changeOrigin: true,
-        pathRewrite: { "^/api/usgs": "" },
+        pathRewrite: { "^/": "/" },
         on: {
             proxyRes: (_proxyRes, _req, _res) => {
                 _proxyRes.headers["access-control-allow-origin"] = "*";
@@ -89,7 +89,7 @@ app.use(
     createProxyMiddleware({
         target: "https://data.aishub.net",
         changeOrigin: true,
-        pathRewrite: { "^/api/ais": "" },
+        pathRewrite: { "^/": "/" },
         on: {
             proxyRes: (_proxyRes, _req, _res) => {
                 _proxyRes.headers["access-control-allow-origin"] = "*";
@@ -113,6 +113,11 @@ app.get("/api/data/nuclear-facilities", (_req, res) => {
 // Military installations (served from local data)
 app.get("/api/data/military-bases", (_req, res) => {
     res.sendFile(path.join(__dirname, "data", "military-bases.json"));
+});
+
+// Australian crime hotspots (ABS/state statistics mapped to suburb centroids)
+app.get("/api/data/au-crime", (_req, res) => {
+    res.sendFile(path.join(__dirname, "data", "au-crime-hotspots.json"));
 });
 
 // --- Production Static File Serving ---

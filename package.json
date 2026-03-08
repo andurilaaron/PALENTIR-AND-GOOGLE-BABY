@@ -14,6 +14,8 @@
     "postinstall": "node scripts/copy-cesium.mjs"
   },
   "dependencies": {
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow/tfjs": "^4.22.0",
     "cesium": "^1.138.0",
     "compression": "^1.8.1",
     "express": "^5.2.1",
